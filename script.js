@@ -47,7 +47,8 @@ window.onload = () => {
   var paddle = {
     w : 75, 
     h : 10,
-    x : (canvas.width-75) / 2
+    x : (canvas.width-75) / 2,
+    y : canvas.height - (10 * 3)
   };
 
   function refresh(){
@@ -65,7 +66,7 @@ window.onload = () => {
     paddleInput();
     drawPaddle(paddle);
   }
-  setInterval(refresh, 10);
+  var interval = setInterval(refresh, 50);
   
   function drawCirc(obj, color, type){
     ctx.beginPath();
@@ -122,7 +123,7 @@ window.onload = () => {
   } 
   function drawPaddle(obj){
     ctx.beginPath();
-    ctx.rect(obj.x, canvas.height - (obj.h * 3), obj.w, obj.h);
+    ctx.rect(obj.x, obj.y, obj.w, obj.h);
     ctx.fillStyle = "black";
     ctx.fill();
     ctx.closePath();
@@ -143,10 +144,15 @@ window.onload = () => {
   
   function checkBoundaries(obj){
     //check top/bottom boundaries
-    if(obj.y + obj.dy < obj.v1 || obj.y + obj.dy > canvas.height - obj.v2){
+    if(obj.y + obj.dy < obj.v1){
       obj.dy = calcNewDir(obj.dy);
       if(obj.getObject() === "ball")
         obj.col = getRandomColor();
+    } 
+    else if(obj.y + obj.dy > canvas.height - obj.v2){
+      alert("GAME OVER");
+      document.location.reload();
+      clearInterval(interval); //needed for chrome
     }
     //check left/right boundaries
     if(obj.x + obj.dx < obj.v1 || obj.x + obj.dx > canvas.width - obj.v2){
@@ -154,10 +160,65 @@ window.onload = () => {
       if(obj.getObject() === "ball")
         obj.col = getRandomColor();
     }
+    /*
+    //check if object hit paddle
+    if(obj.y + obj.dy + obj.v2 > paddle.y && obj.x + obj.dx < paddle.x + paddle.w && obj.x + obj.dx > paddle.x) //paddle right collision
+      obj.dx = calcNewDir(obj.dx);
+    if(obj.y + obj.dy + obj.v2 > paddle.y && obj.x + obj.dx + obj.v2 > paddle.x && obj.x + obj.dx + obj.v2 < paddle.x + paddle.w) //paddle left collision
+      obj.dx = calcNewDir(obj.dx);
+    if ( (obj.x > paddle.x && obj.x < paddle.x + paddle.w) || ((obj.x + obj.w) > paddle.x && (obj.x < paddle.x + paddle.w) &&
+      obj.y + obj.dy + obj.v2 > paddle.y))
+    {
+      obj.dy = calcNewDir(obj.dy);
+      console.log("paddle collision");
+    }
+    */
+    checkPaddleCollision(obj);
+    
     
     //update position
     obj.x += obj.dx;
     obj.y += obj.dy;
+  }
+  
+  function checkPaddleCollision(obj){
+    if(obj.x < paddle.x + paddle.w &&
+        obj.x + obj.v2 > paddle.x    &&
+        obj.y < paddle.y + paddle.h  &&
+        obj.y + obj.v2 > paddle.y){
+        
+        if(obj.x < paddle.x + paddle.w && 
+          obj.x + obj.v2 > paddle.x + paddle.w &&
+          obj.y + obj.v2 > paddle.y + 3){
+          if(rightPressed)
+            paddle.x -= 10;
+          console.log("paddle right collision");
+          //obj.x = paddle.x + paddle.w + 1;
+          obj.dx = calcNewDir(obj.dx);
+          return;
+        }
+        
+        if(obj.x + obj.v2 > paddle.x && 
+          obj.x < paddle.x && 
+          obj.y + obj.v2 > paddle.y + 3){
+            if(leftPressed)
+              paddle.x += 10;
+            console.log("paddle left collision");
+            //obj.x = paddle.x - obj.v2 - 1;
+            obj.dx = calcNewDir(obj.dx);
+            return;
+          }
+        
+        if(obj.y < paddle.y + paddle.h)
+          console.log("paddle bottom collision");
+        
+        if(obj.y + obj.v2 > paddle.y){
+          console.log("paddle top collision");
+          obj.y = paddle.y - obj.v2 -1;
+          obj.dy = calcNewDir(obj.dy);
+          return;
+        }
+      }
   }
   
   function calcNewDir(dir){
