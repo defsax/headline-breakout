@@ -3,14 +3,20 @@ window.onload = () => {
   var canvas = document.getElementById("myCanvas");
   //store rendering context
   var ctx = canvas.getContext("2d");
+  ctx.imageSmoothingEnabled = false;
+  
+  //input vars
+  var rightPressed = false;
+  var leftPressed = false;
+  
+  document.addEventListener("keydown", keyDownHandler, false);
+  document.addEventListener("keyup", keyUpHandler, false);
   
   //watch these...
   canvas.width = document.body.clientWidth;
   //canvas.height = document.body.clientHeight;
   canvas.height = window.innerHeight;
   console.log("canvas.width: " + canvas.width);
-  
-  ctx.imageSmoothingEnabled = false;
   
   var ball = {
     x : 50,
@@ -37,11 +43,17 @@ window.onload = () => {
       return "square";
     }
   };
+  
+  var paddle = {
+    w : 75, 
+    h : 10,
+    x : (canvas.width-75) / 2
+  };
 
-  function draw(){
+  function refresh(){
     //refresh context
     ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
+    
     drawText("HELlo WorLD", 10, 50, "white", "stroke");
      
     checkBoundaries(ball);
@@ -49,8 +61,11 @@ window.onload = () => {
     
     checkBoundaries(square);    
     drawRect(square, "red", "fill");
+    
+    paddleInput();
+    drawPaddle(paddle);
   }
-  setInterval(draw, 10);
+  setInterval(refresh, 10);
   
   function drawCirc(obj, color, type){
     ctx.beginPath();
@@ -104,7 +119,27 @@ window.onload = () => {
         console.log("Unknown type.");
         break;
     }
-  }  
+  } 
+  function drawPaddle(obj){
+    ctx.beginPath();
+    ctx.rect(obj.x, canvas.height - (obj.h * 3), obj.w, obj.h);
+    ctx.fillStyle = "black";
+    ctx.fill();
+    ctx.closePath();
+  }
+  
+  function paddleInput(){
+    if(rightPressed){
+      paddle.x += 7;
+      if(paddle.x + paddle.w > canvas.width)
+        paddle.x = canvas.width - paddle.w;
+    }
+    else if(leftPressed){
+      paddle.x -= 7;
+      if(paddle.x < 0)
+        paddle.x = 0;
+    }
+  }
   
   function checkBoundaries(obj){
     //check top/bottom boundaries
@@ -140,5 +175,19 @@ window.onload = () => {
       color += letters[Math.floor(Math.random() * 16)];
     }
     return color;
+  }
+  
+  function keyDownHandler(e){
+    if(e.key == "Right" || e.key == "ArrowRight")
+      rightPressed = true;
+    
+    else if(e.key == "Left" || e.key == "ArrowLeft")
+      leftPressed = true;
+  }
+  function keyUpHandler(e){
+    if(e.key == "Right" || e.key == "ArrowRight")
+      rightPressed = false;
+    else if(e.key == "Left" || e.key == "ArrowLeft")
+      leftPressed = false;
   }
 }
