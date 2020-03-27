@@ -12,71 +12,66 @@ window.onload = () => {
   
   ctx.imageSmoothingEnabled = false;
   
-  //create starting position and offset variable per frame
-  var x = 50;
-  var y = canvas.height-30; 
-  var ballRadius = 10;
-  var ballCol = getRandomColor();
-  var dx = 2;
-  var dy = -2;
+  var ball = {
+    x : 50,
+    y : canvas.height-30,
+    r : 10,
+    v1 : 10, v2 : 10,
+    dx : 2,
+    dy : -2,
+    col : getRandomColor(),
+    getObject : function(){
+      return "ball";
+    }
+  };
   
-  var squX = 100;
-  var squY = 100;
-  var squW = 50;
-  var squH = 50;
-  var squDX = -2;
-  var squDY = 2;
+  var square = {
+    x : 100,
+    y : 100,
+    w : 50,
+    h : 50,
+    v1 : 0, v2 : 50,
+    dx : -2,
+    dy : 2,
+    getObject : function(){
+      return "square";
+    }
+  };
 
   function draw(){
     //refresh context
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
   
     drawText("HELlo WorLD", 10, 50, "white", "stroke");
      
-    //CIRCLE
-    //check top/bottom boundaries
-    if(y + dy < ballRadius || y + dy > canvas.height - ballRadius){
-      dy = calcNewDir(dy);
-      ballCol = getRandomColor();
-    }
-    //check left/right boundaries
-    if(x + dx < ballRadius || x + dx > canvas.width - ballRadius){
-      dx = calcNewDir(dx);
-      ballCol = getRandomColor();
-    }
-    //update position
-    x += dx;
-    y += dy;
-    drawCirc(x, y, ballRadius, ballCol);
+    checkBoundaries(ball);
+    drawCirc(ball, ball.col, "fill");
     
-    //SQUARE
-    //check top/bottom boundaries
-    if(squY + squDY < 0 || squY + squDY > canvas.height - squH){
-      squDY = calcNewDir(squDY);
-    }
-    //check left/right boundaries
-    if(squX + squDX < 0 || squX + squDX > canvas.width - squW){
-      squDX = calcNewDir(squDX);
-    }
-    squX += squDX;
-    squY += squDY;
-    
-    drawRect(squX, squY, squW, squH, "red", "fill");
-    
-    
+    checkBoundaries(square);    
+    drawRect(square, "red", "fill");
   }
   setInterval(draw, 10);
   
-  function drawCirc(xPos, yPos, r, color){
+  function drawCirc(obj, color, type){
     ctx.beginPath();
-    ctx.arc(xPos, yPos, r, 0, Math.PI*2, false);
-    ctx.strokeStyle = color;
-    ctx.stroke();
+    ctx.arc(obj.x, obj.y, obj.r, 0, Math.PI*2, false);
+    switch(type){
+      case "stroke":
+        ctx.strokeStyle = color;
+        ctx.stroke();
+        break;
+      case "fill":
+        ctx.fillStyle = color;
+        ctx.fill();
+        break;
+      default:
+        break;
+    }
     ctx.closePath();
   }
-  function drawRect(xPos, yPos, w, h, color, type){
+  function drawRect(obj, color, type){
     ctx.beginPath();
-    ctx.rect(xPos, yPos, w, h);
+    ctx.rect(obj.x, obj.y, obj.w, obj.h);
     switch(type){
       case "stroke":
         ctx.strokeStyle = color;
@@ -110,6 +105,25 @@ window.onload = () => {
         break;
     }
   }  
+  
+  function checkBoundaries(obj){
+    //check top/bottom boundaries
+    if(obj.y + obj.dy < obj.v1 || obj.y + obj.dy > canvas.height - obj.v2){
+      obj.dy = calcNewDir(obj.dy);
+      if(obj.getObject() === "ball")
+        obj.col = getRandomColor();
+    }
+    //check left/right boundaries
+    if(obj.x + obj.dx < obj.v1 || obj.x + obj.dx > canvas.width - obj.v2){
+      obj.dx = calcNewDir(obj.dx);
+      if(obj.getObject() === "ball")
+        obj.col = getRandomColor();
+    }
+    
+    //update position
+    obj.x += obj.dx;
+    obj.y += obj.dy;
+  }
   
   function calcNewDir(dir){
     if(dir < 0){
