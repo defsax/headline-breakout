@@ -1,7 +1,5 @@
 var headlines = [];
 
-
-
 window.onload = () => {
   //reference canvas
   var canvas = document.getElementById("myCanvas");
@@ -19,11 +17,11 @@ window.onload = () => {
   //game active bool
   var ballAttached = true;
   
-  //document.addEventListener("DOMContentLoaded", processHeadlines, false);
+  document.addEventListener("DOMContentLoaded", processHeadlines, false);
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
   
-    function processHeadlines(){
+  function processHeadlines(){
     for(let i = 0; i < headlines.length; i++){
       console.log(headlines[i]);
     }
