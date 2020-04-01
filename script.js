@@ -1,3 +1,7 @@
+var headlines = [];
+
+
+
 window.onload = () => {
   //reference canvas
   var canvas = document.getElementById("myCanvas");
@@ -15,8 +19,15 @@ window.onload = () => {
   //game active bool
   var ballAttached = true;
   
+  //document.addEventListener("DOMContentLoaded", processHeadlines, false);
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
+  
+    function processHeadlines(){
+    for(let i = 0; i < headlines.length; i++){
+      console.log(headlines[i]);
+    }
+  }
   
   //watch these...
   canvas.width = document.body.clientWidth;
@@ -48,7 +59,7 @@ window.onload = () => {
   function refresh(){
     
     //refresh context
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     //round ball vars to nearest hundredth
     var xRounded = ball.x.toFixed(2);
@@ -69,10 +80,6 @@ window.onload = () => {
     
     paddleInput(intervalSpeed);
     drawPaddle(paddle);
-
-    //document.getElementById("title").innerHTML = "deltaTime: " + deltaTime;
-    //console.log(currTime.getTime());
-    
   }
   var interval = setInterval(refresh, intervalSpeed);
   
@@ -176,6 +183,7 @@ window.onload = () => {
     if(AABBcollision(obj, paddle)){
       calculateNewAngle(obj);
       obj.col = getRandomColor();
+      document.getElementById('title').innerHTML = headlines[Math.floor(Math.random() * headlines.length)];
     }
     
     //update position
@@ -247,3 +255,102 @@ window.onload = () => {
       console.log("Space released.");
   }
 }
+
+  const DOMPARSER = new DOMParser();//.parseFromString.bind(new DOMParser());
+  var frag = document.createDocumentFragment();
+
+
+fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml').then((response) => {
+  response.text().then((xmlTEXT) =>{
+    console.log(xmlTEXT);
+    try{
+      let doc = DOMPARSER.parseFromString(xmlTEXT, "text/xml");
+      console.log(doc);
+      doc.querySelectorAll('item').forEach((item) => {
+        let temp = document.importNode(document.querySelector('template').content, true);
+        let i = item.querySelector.bind(item);
+        let t = temp.querySelector.bind(temp);
+        t('h2').textContent = !!i('title') ? i('title').textContent : '-';
+        var title = !!i('title') ? i('title').textContent : '-';
+        //document.getElementById('title').innerHTML = title;
+        console.log(title);
+        console.log(headlines.length);
+        headlines.push(title);
+        frag.appendChild(temp);
+      })
+    }catch(e){
+      console.error("Error in parsing feed.");
+    }
+  })
+})
+    /*
+      fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml').then((res) => {
+        res.text().then((xmlTxt) => {
+          var domParser = new DOMParser(),
+          let doc = domParser.parseFromString(xmlTxt, 'text/html'),
+          var feedUrl = doc.querySelector('link[type="application/rss+xml"]').href
+        })
+      }.catch(() => console.error('Error in fetching the website.'))
+      */                                                                   
+      
+/*
+    // Fetch URLs from JSON
+    fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml').then((res) => {
+      res.text().then((data) => {
+        var frag = document.createDocumentFragment()
+        var hasBegun = true
+        
+        
+        JSON.parse(data).urls.forEach((u) => {
+          try {
+            var url = new URL(u)
+          }
+          catch (e) {
+            console.error('URL invalid');
+            return
+          }
+          fetch(url).then((res) => {
+            res.text().then((htmlTxt) => {
+              // Extract the RSS Feed URL from the website 
+              try {
+                let doc = DOMPARSER(htmlTxt, 'text/html')
+                var feedUrl = doc.querySelector('link[type="application/rss+xml"]').href
+              } catch (e) {
+                console.error('Error in parsing the website');
+                return
+              }
+              // Fetch the RSS Feed
+              fetch(feedUrl).then((res) => {
+                res.text().then((xmlTxt) => {
+                  // Parse the RSS Feed and display the content
+                  try {
+                    let doc = DOMPARSER(xmlTxt, "text/xml")
+                    let heading = document.createElement('h1')
+                    heading.textContent = url.hostname
+                    frag.appendChild(heading)
+                    doc.querySelectorAll('item').forEach((item) => {
+                      let temp = document.importNode(document.querySelector('template').content, true);
+                      let i = item.querySelector.bind(item)
+                      let t = temp.querySelector.bind(temp)
+                      t('h2').textContent = !!i('title') ? i('title').textContent : '-'
+                      t('a').textContent = t('a').href = !!i('link') ? i('link').textContent : '#'
+                      t('p').innerHTML = !!i('description') ? i('description').textContent : '-'
+                      t('h3').textContent = url.hostname
+                      frag.appendChild(temp)
+                    })
+                  } catch (e) {
+                    console.error('Error in parsing the feed')
+                  }
+                  if(hasBegun) {
+                    document.querySelector('output').textContent = ''; 
+                    hasBegun = false;
+                  }
+                  document.querySelector('output').appendChild(frag)
+                })
+              }).catch(() => console.error('Error in fetching the RSS feed'))
+            })
+          }).catch(() => console.error('Error in fetching the website'))
+        })
+      })
+    }).catch(() => console.error('Error in fetching the URLs json'))
+*/
