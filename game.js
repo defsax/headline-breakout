@@ -18,6 +18,7 @@ window.onload = () => {
   //document.addEventListener("DOMContentLoaded", processHeadlines, false);
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
+  document.getElementById("resButton").addEventListener("click", reset);
   
   
   //watch these...
@@ -48,7 +49,6 @@ window.onload = () => {
   };
 
   function refresh(){
-    
     //refresh context
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
@@ -92,26 +92,7 @@ window.onload = () => {
     }
     ctx.closePath();
   }
-  function drawRect(obj, color, type){
-    ctx.beginPath();
-    ctx.rect(obj.x, obj.y, obj.w, obj.h);
-    switch(type){
-      case "stroke":
-        ctx.strokeStyle = color;
-        ctx.stroke();
-        break;
-      case "fill":
-        ctx.fillStyle = color;
-        ctx.strokeStyle = "black";
-        ctx.fill();
-        ctx.stroke();
-        break;
-      default:
-        console.log("Unknown type.");
-        break;
-    }
-    ctx.closePath();
-  }
+
   function drawText(text, w, h, color, type){
     ctx.font = "30px Arial";
     switch(type){
@@ -160,9 +141,10 @@ window.onload = () => {
         obj.col = getRandomColor();
     } 
     else if(obj.y + obj.dy > canvas.height - obj.r){
-      alert("GAME OVER");
-      document.location.reload();
-      clearInterval(interval); //needed for chrome
+      document.getElementById("resButton").style.display = "block";
+      document.getElementById("title").innerHTML = "GAME OVER";
+      obj.speed = 0;
+      //reset();
     }
     //check left/right boundaries
     if(obj.x + obj.dx < obj.r || obj.x + obj.dx > canvas.width - obj.r){
@@ -227,6 +209,11 @@ window.onload = () => {
       return true;
     else
       return false;
+  }
+  
+  function reset(){
+    document.location.reload();
+    clearInterval(interval); //needed for chrome
   }
   
   function getRandomColor(){
