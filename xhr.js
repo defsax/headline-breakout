@@ -30,12 +30,14 @@ function getNews(item){
           postArray.push({"title": data.items[i].title, "link": data.items[i].link});
         }
       }
-      else{console.log("data status not okay.");}
+      else{
+        console.log("data status not okay.");
+        return;
+      }
     }
   };
   xhr.open('GET', api + item, true);
   xhr.send();
-    
 }
 
 feedURLS.forEach(getNews);

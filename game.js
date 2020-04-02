@@ -19,13 +19,6 @@ window.onload = () => {
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
   
-  /*
-  function processHeadlines(){
-    for(let i = 0; i < headlines.length; i++){
-      console.log(headlines[i]);
-    }
-  }
-  */
   
   //watch these...
   canvas.width = document.body.clientWidth;
@@ -57,13 +50,14 @@ window.onload = () => {
   function refresh(){
     
     //refresh context
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     //round ball vars to nearest hundredth
     var xRounded = ball.x.toFixed(2);
     var yRounded = ball.y.toFixed(2);
     drawText(xRounded.toString(), 10, 25, "black", "fill");
     drawText(yRounded.toString(), 10, 50, "black", "fill");
+    drawText("Articles left: " + postArray.length.toString(), 10, 75, "black", "fill");
     
     if(ballAttached === true){
       ball.x = paddle.x + (paddle.w / 2);
@@ -187,6 +181,7 @@ window.onload = () => {
         document.getElementById('title').href = postArray[randPost].link;
         postArray.splice(randPost, 1);
         console.log(postArray);
+        
       }
       else{
         document.getElementById('title').innerHTML = "";
@@ -271,161 +266,22 @@ var urls = ["https://www.huffpost.com/section/front-page/feed?x=1",
 ]
 
 var headlines = [];
-//const DOMPARSER = new DOMParser();//.parseFromString.bind(new DOMParser());
-var frag = document.createDocumentFragment();
-/*
-fetch('http://feeds.bbci.co.uk/news/rss.xml', {mode: 'no-cors'}
-)
-  //.then(data => {return data.json()})
-  .then(response => {
-    console.log(response);
-    
-    response.text()
-    .then((htmlTXT) => {
-      console.log(htmlTXT);
-    })
-  })
-  
-  .then(str =>{
-    console.log(str);
-  })
-  .then(data =>{
-    console.log(data);
-  })
-  //.then(str => new window.DOMParser().parseFromString(str, "text/xml"))
-  //.then(data => console.log(data))
+const DOMPARSER = new DOMParser();
 
-/*
-fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'
-//, { mode: 'no-cors' }
-)
-.then((response) => {
-  response.text().then((htmlTXT) =>{
-    console.log("html text: " + htmlTXT);
-    try{
-      let doc = DOMPARSER(htmlTXT, 'text/html');
-      console.log("doc = " + doc);
-      var feedURL = doc.querySelector('atom:link[type="application/rss+xml"]').href;
-    }catch(e){
-      console.error('Error in parsing the site.');
-      return;
-    }
-    fetch(feedURL)
-    .then((res) => {
-      res.text().then((xmlTEXT) => {
-      try{
-        let doc = DOMPARSER(xmlTEXT, "text/xml");
-        doc.querySelectorAll('item').forEach((item) => {
-          let temp = document.importNode(document.querySelector('template').content, true);
-          let i = item.querySelector.bind(item);
-          let t = temp.querySelector.bind(temp);
-          t('h2').textContent = !!i('title') ? i('title').textContent : '-';
-          var title = !!i('title') ? i('title').textContent : '-';
-          //document.getElementById('title').innerHTML = title;
-          console.log(title);
-          console.log(headlines.length);
-          headlines.push(title);
-          frag.appendChild(temp);
-        })
-      }catch(e){
-        console.error("Error in parsing feed.");
-      }
-      })
-    })
-  })
-})
-*/
-/*
-fetch('https://www.huffpost.com/section/world-news/feed'//, { mode: 'no-cors' }
-)
+fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
 .then((response) => {
   response.text().then((xmlTEXT) =>{
-    console.log("xml text: " + xmlTEXT);
     try{
       let doc = DOMPARSER.parseFromString(xmlTEXT, "text/xml");
-      console.log(doc);
       doc.querySelectorAll('item').forEach((item) => {
-        let temp = document.importNode(document.querySelector('template').content, true);
         let i = item.querySelector.bind(item);
-        let t = temp.querySelector.bind(temp);
-        t('h2').textContent = !!i('title') ? i('title').textContent : '-';
         var title = !!i('title') ? i('title').textContent : '-';
-        //document.getElementById('title').innerHTML = title;
-        console.log(title);
-        console.log(headlines.length);
-        headlines.push(title);
-        frag.appendChild(temp);
+        var link = !!i('link') ? i('link').textContent: '-';
+        headlines.push({"title": title, "link": link});
+        postArray.push({"title": title, "link": link});
       })
     }catch(e){
       console.error("Error in parsing feed.");
     }
   })
 })                                                        
-*/
-
-
-/*
-// Fetch URLs from JSON
-fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml'//,{mode: 'no-cors'}
-  
-)
-.then((res) => {
-  res.text().then((data) => {
-    var frag = document.createDocumentFragment();
-    var hasBegun = true;
-    
-    
-    JSON.parse(data).urls.forEach((u) => {
-      try {
-        var url = new URL(u);
-      }
-      catch (e) {
-        console.error('URL invalid');
-        return;
-      }
-      fetch(url).then((res) => {
-        res.text().then((htmlTxt) => {
-          // Extract the RSS Feed URL from the website 
-          try {
-            let doc = DOMPARSER(htmlTxt, 'text/html');
-            var feedUrl = doc.querySelector('link[type="application/rss+xml"]').href;
-          } catch (e) {
-            console.error('Error in parsing the website');
-            return;
-          }
-          // Fetch the RSS Feed
-          fetch(feedUrl).then((res) => {
-            res.text().then((xmlTxt) => {
-              // Parse the RSS Feed and display the content
-              try {
-                let doc = DOMPARSER(xmlTxt, "text/xml");
-                let heading = document.createElement('h1');
-                heading.textContent = url.hostname;
-                frag.appendChild(heading);
-                doc.querySelectorAll('item').forEach((item) => {
-                  let temp = document.importNode(document.querySelector('template').content, true);
-                  let i = item.querySelector.bind(item);
-                  let t = temp.querySelector.bind(temp);
-                  t('h2').textContent = !!i('title') ? i('title').textContent : '-';
-                  t('a').textContent = t('a').href = !!i('link') ? i('link').textContent : '#';
-                  t('p').innerHTML = !!i('description') ? i('description').textContent : '-';
-                  t('h3').textContent = url.hostname;
-                  frag.appendChild(temp);
-                })
-              } catch (e) {
-                console.error('Error in parsing the feed');
-              }
-              if(hasBegun) {
-                document.querySelector('output').textContent = ''; 
-                hasBegun = false;
-              }
-              document.querySelector('output').appendChild(frag);
-            })
-          }).catch(() => console.error('Error in fetching the RSS feed'));
-        })
-      }).catch(() => console.error('Error in fetching the website'));
-    })
-  })
-}).catch(() => console.error('Error in fetching the URLs json'));
-
-*/

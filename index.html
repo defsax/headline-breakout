@@ -8,15 +8,18 @@
     <link rel="stylesheet" href="reset.css">
     <link rel="stylesheet" href="style.css">
 
+
+
     <script src="xhr.js" type="text/javascript"></script>
-    <script src="script.js" type="application/javascript"></script>
-  
+    <script src="game.js" type="application/javascript"></script>
+ 
   </head>
   
   <body>
     
     <!--<h1 id="title"></h1>-->
-    <a id="title" target="_blank"></a>
+    <a id="title" target="_blank">START THE GAME</a>
+    
     <template>
       <h2>0</h2>
       <h3></h3>
@@ -25,6 +28,8 @@
     </template>  
     
     <canvas id="myCanvas"></canvas> 
-    
-    </body>
+    <script src="fittext.js" type="text/javascript">
+      fittext(document.getElementById('title'), 1.2);
+    </script>
+  </body>
 </html>

@@ -22,14 +22,25 @@ a{
   z-index: 1;
   position: absolute;
   display: block;
-  margin: 20vh auto;
+  margin: auto auto;
   padding: 0.5em;
   box-sizing: border-box;
   width: 100%;
   text-align: left;
-  font-size: 5em; 
+  font-size: 15vw;
   text-decoration: none;
 }
 a:link,a:visited,a:hover,a:active{
   color: black;
+}
+.container{
+  z-index: 1;
+  position: absolute;
+  display: block;
+  margin: auto auto;
+  padding: 0.5em;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: left;
+  font-size: 15vw;
 }
