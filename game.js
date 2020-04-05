@@ -266,11 +266,14 @@ window.onload = () => {
   }
 }
 
-var urls = ["https://www.huffpost.com/section/front-page/feed?x=1", 
-  "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml", 
-  "https://www.yahoo.com/news/rss",
-  "http://feeds.bbci.co.uk/news/rss.xml"
-]
+/*
+ * nytimes
+ * yahoo
+ * huffpo
+ * bbc
+ * cbc?
+ * fox?
+*/
 
 var headlines = [];
 const DOMPARSER = new DOMParser();
