@@ -19,12 +19,12 @@ function getNews(item){
   xhr.onreadystatechange = function(){
     if(xhr.readyState==4 && xhr.status==200){
       var data = JSON.parse(xhr.responseText);
-      console.log(data);
+      //console.log(data);
       if(data.status == 'ok'){
         let t = data.items.length;
         for(let i = 0; i < t; i++){
-          console.log(data.items[i].title);
-          console.log(data.items[i].link);
+          //console.log(data.items[i].title);
+          //console.log(data.items[i].link);
           post.title = data.items[i].title;
           post.url = data.items[i].link;
           postArray.push({"title": data.items[i].title, "link": data.items[i].link});

@@ -13,19 +13,24 @@ window.onload = () => {
   var intervalSpeed = 10;
   
   //game active bool
-  var ballAttached = true;
-  
-  //document.addEventListener("DOMContentLoaded", processHeadlines, false);
-  document.addEventListener("keydown", keyDownHandler, false);
-  document.addEventListener("keyup", keyUpHandler, false);
-  document.getElementById("resButton").addEventListener("click", reset);
-  
+  var ballAttached = true; 
   
   //watch these...
   canvas.width = document.body.clientWidth;
   //canvas.height = document.body.clientHeight;
   canvas.height = window.innerHeight;
   console.log("canvas.width: " + canvas.width);
+  
+  //document.addEventListener("DOMContentLoaded", processHeadlines, false);
+  document.addEventListener("keydown", keyDownHandler, false);
+  document.addEventListener("keyup", keyUpHandler, false);
+  
+  document.addEventListener("touchstart", touchStartHandler, false);
+  document.addEventListener("touchmove", touchMoveHandler, false);
+  document.addEventListener("touchend", touchEndHandler, false);
+  
+  
+  document.getElementById("resButton").addEventListener("click", reset);
   
   var paddle = {
     w : 75, 
@@ -243,6 +248,21 @@ window.onload = () => {
       leftPressed = false;
     else if(e.keyCode == 32)
       console.log("Space released.");
+  }
+  function touchStartHandler(e){
+    e.preventDefault();
+    paddle.x = e.touches[0].clientX - paddle.w / 2;
+  }
+  function touchMoveHandler(e){
+    e.preventDefault();
+    paddle.x = e.touches[0].clientX - paddle.w / 2;
+  }
+  function touchEndHandler(e){
+    if(ballAttached === true){
+      calculateStartAngle(ball);
+      ballAttached = false;
+    }
+    e.preventDefault();
   }
 }
 
