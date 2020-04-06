@@ -15,21 +15,28 @@ window.onload = () => {
   //game active bool
   var ballAttached = true; 
   
+  var feedURLS = [
+    'http://feeds.bbci.co.uk/news/rss.xml',
+    'https://www.huffpost.com/section/front-page/feed?x=1',
+    'https://www.yahoo.com/news/rss'
+  ];
+  var postArray = window.fetchnews(feedURLS);
+  
   //watch these...
   canvas.width = document.body.clientWidth;
   //canvas.height = document.body.clientHeight;
   canvas.height = window.innerHeight;
   console.log("canvas.width: " + canvas.width);
+  console.log("canvas.height: " + canvas.height);
   
   //document.addEventListener("DOMContentLoaded", processHeadlines, false);
+  
+  //input event listeners
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
-  
   document.addEventListener("touchstart", touchStartHandler, false);
   document.addEventListener("touchmove", touchMoveHandler, false);
   document.addEventListener("touchend", touchEndHandler, false);
-  
-  
   document.getElementById("resButton").addEventListener("click", reset);
   
   var paddle = {
@@ -146,10 +153,12 @@ window.onload = () => {
         obj.col = getRandomColor();
     } 
     else if(obj.y + obj.dy > canvas.height - obj.r){
+      //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
       document.getElementById("title").innerHTML = "GAME OVER";
+      document.getElementById("title").style.pointerEvents = "none"; 
       obj.speed = 0;
-      //reset();
+      //reset function is attached to the button. loop technically continues until user presses restart
     }
     //check left/right boundaries
     if(obj.x + obj.dx < obj.r || obj.x + obj.dx > canvas.width - obj.r){
@@ -230,6 +239,7 @@ window.onload = () => {
     return color;
   }
   
+  //INPUT CONTROLS
   function keyDownHandler(e){
     if(e.key == "Right" || e.key == "ArrowRight")
       rightPressed = true;
@@ -273,25 +283,4 @@ window.onload = () => {
  * bbc
  * cbc?
  * fox?
-*/
-
-var headlines = [];
-const DOMPARSER = new DOMParser();
-
-fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
-.then((response) => {
-  response.text().then((xmlTEXT) =>{
-    try{
-      let doc = DOMPARSER.parseFromString(xmlTEXT, "text/xml");
-      doc.querySelectorAll('item').forEach((item) => {
-        let i = item.querySelector.bind(item);
-        var title = !!i('title') ? i('title').textContent : '-';
-        var link = !!i('link') ? i('link').textContent: '-';
-        headlines.push({"title": title, "link": link});
-        postArray.push({"title": title, "link": link});
-      })
-    }catch(e){
-      console.error("Error in parsing feed.");
-    }
-  })
-})                                                        
+*/                                                    
