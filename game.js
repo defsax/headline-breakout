@@ -19,15 +19,7 @@ window.onload = () => {
   var fontSize = 0;
   
   //rss feeds
-  /*
-  * nytimes
-  * breitbart
-  * huffpo
-  * bbc
-  * cbc
-  * hackernews
-  */                                                    
-
+  //nytimes, huffpo, bbc, cbc, hackernews
   var feedURLS = [
     'http://feeds.bbci.co.uk/news/rss.xml',
     'https://www.huffpost.com/section/front-page/feed?x=1',
@@ -53,73 +45,193 @@ window.onload = () => {
   document.addEventListener("touchend", touchEndHandler, false);
   document.getElementById("resButton").addEventListener("click", reset);
   
-  var paddle = {
-    w : 75, 
-    h : 10,
-    x : (canvas.width-75) / 2,
-    y : canvas.height - (10 * 3),
-    speed : 0.3
-  };
+  function GameObject(x, y){
+    this.position = { x, y };
+  }
+  GameObject.prototype.greeting = function(){
+    alert("HI, I\'m a " + this.constructor.name + " at position (x: " + this.position.x + " y: " + this.position.y + ")");
+  }
   
-  var ball = {
-    x : paddle.x + paddle.w / 2,
-    y : paddle.y - 10,
-    r : 10,
-    dx : 0.1,
-    dy : -0.1,
-    speed : 0.3,
-    col : getRandomColor(),
-    getObject : function(){
-      return "ball";
+  //paddle class
+  function Paddle(x, y, w, h, speed){
+    GameObject.call(this, x, y);
+    this.w = w;
+    this.h = h;
+    this.speed = speed;
+    
+    this.draw = function(context){
+      context.beginPath();
+      context.rect(this.position.x, this.position.y, this.w, this.h);
+      context.fillStyle = "black";
+      context.strokeStyle = "black";
+      context.fill();
+      context.stroke();
+      context.closePath();
     }
-  };
+    //PADDLE MOVEMENT/CHECKING
+    this.input = function(dt){
+      if(rightPressed){
+        this.position.x += 1 * dt * this.speed;
+        if(this.position.x + this.w > canvas.width)
+          this.position.x = canvas.width - this.w;
+      }
+      else if(leftPressed){
+        this.position.x -= 1 * dt * this.speed;
+        if(this.position.x < 0)
+          this.position.x = 0;
+      }
+    }
+  }
+  Paddle.prototype = Object.create(GameObject.prototype);
+  Object.defineProperty(Paddle.prototype, 'constructor', {
+    value: Paddle,
+    enumerable: false, 
+    writable: true
+  });
+  
+  //ball class
+  function Ball(x, y, r, speed){
+    GameObject.call(this, x, y);
+    this.radius = r;
+    this.speed = speed;
+    this.direction = { x : 0.1, y : -0.1 };
+    
+    this.colour = 'black';
+    this.randomizeColor = function(){
+      var letters = '0123456789ABCDEF';
+      let color = '#';
+      for (var i = 0; i < 6; i++){
+        color += letters[Math.floor(Math.random() * 16)];
+      }
+      this.colour = color;
+    }
+    
+    this.draw = function(context, type){
+      ctx.beginPath();
+      ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
+      switch(type){
+        case "stroke":
+          ctx.strokeStyle = this.colour;
+          ctx.stroke();
+          break;
+        case "fill":
+          ctx.fillStyle = this.colour;
+          ctx.stokeStyle = "black"
+          ctx.fill();
+          ctx.lineWidth = 3;
+          ctx.stroke();
+          ctx.lineWidth = 1;
+          break;
+        default:
+          break;
+      }
+      ctx.closePath();
+    }
+    
+    this.checkBoundaries = function(dt, pad){
+      //check left/right boundaries
+      if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvas.width - this.radius){
+        this.direction.x = -this.direction.x;
+        this.randomizeColor();
+      }
+      //check top boundaries
+      if(this.position.y + this.direction.y < this.radius){
+        this.direction.y = -this.direction.y;
+        this.randomizeColor();
+      } 
+      else if(this.position.y + this.direction.y > canvas.height - this.radius){
+        //show button, set text to game over and disable link
+        document.getElementById("resButton").style.display = "block";
+        document.getElementById("title").innerHTML = "GAME OVER";
+        document.getElementById("title").style.pointerEvents = "none"; 
+        this.speed = 0;
+        document.removeEventListener("touchstart", touchStartHandler, false);
+        document.removeEventListener("touchmove", touchMoveHandler, false);
+        document.removeEventListener("touchend", touchEndHandler, false);
+        //reset function is attached to the button. loop technically continues until user presses restart
+      }
+
+      //check ball collision with paddle
+      if(this.AABBcollision(pad)){
+        this.calculateNewAngle(pad);
+        this.randomizeColor();
+        updateHeadline();
+      }
+      
+      //update position
+      this.position.x += this.direction.x * dt * this.speed;
+      this.position.y += this.direction.y * dt * this.speed;
+    }
+    
+    this.AABBcollision = function(obj){
+      if(this.position.x < obj.position.x + obj.w   &&
+          this.position.x + this.radius > obj.position.x &&
+          this.position.y < obj.position.y + obj.h  &&
+          this.position.y + this.radius > obj.position.y)
+        return true;
+      else
+        return false;
+    }
+    
+    this.calculateStartAngle = function(){
+      var newBounceAngle = getRndFloat(-1, 1) * (5*Math.PI/12);
+    
+      this.direction.x = Math.sin(newBounceAngle);
+      this.direction.y = -Math.cos(newBounceAngle);
+      this.direction.x = -this.direction.x;
+    }
+    
+    this.calculateNewAngle = function(pad){
+      var paddleCenter = pad.position.x + (pad.w / 2);
+      var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
+    
+      var normalizeIntersect = distanceFromCenter / (pad.w / 2);
+      var newBounceAngle = normalizeIntersect * (5*Math.PI/12);
+      
+      this.direction.x = Math.sin(newBounceAngle);
+      this.direction.y = -Math.cos(newBounceAngle);
+      this.direction.x = -this.direction.x;
+    }
+  }
+  Ball.prototype = Object.create(GameObject.prototype);
+  Object.defineProperty(Ball.prototype, 'constructor', {
+    value: Ball,
+    enumerable: false, 
+    writable: true
+  });
+  
+  
+  var paddle = new Paddle((canvas.width - 75) / 2, canvas.height - (10 * 3), 75, 10, 0.3);
+  var ball = new Ball(20, 20, 10, 0.3);
+  ball.randomizeColor();
 
   function refresh(){
     //refresh context
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     
     //round ball vars to nearest hundredth
-    var xRounded = ball.x.toFixed(2);
-    var yRounded = ball.y.toFixed(2);
-    //drawText(xRounded.toString(), 10, 25, "black", "fill");
-    //drawText(yRounded.toString(), 10, 50, "black", "fill");
+    //var xRounded = ball.x.toFixed(2);
+    //var yRounded = ball.y.toFixed(2);
+    //drawText("Ball speed: " + ball.speed.toString(), 10, 25, "black", "fill");
+    //drawText("Interval speed: " + intervalSpeed, 10, 50, "black", "fill");
     //drawText("Articles left: " + postArray.length.toString(), 10, 75, "black", "fill");
     //drawText("Font Size: " + fontSize + "px", 10, 100, "black", "fill");
     
     if(ballAttached === true){
-      ball.x = paddle.x + (paddle.w / 2);
-      ball.y = paddle.y - ball.r;
-      drawCirc(ball, ball.col, "fill");
+      ball.position.x = paddle.position.x + (paddle.w / 2);
+      ball.position.y = paddle.position.y - ball.radius;
+      ball.draw(ctx, "fill");
     }
     else{
-      checkBoundaries(ball, intervalSpeed);
-      //ball.col = getRandomColor(); //random color every frame
-      drawCirc(ball, ball.col, "fill");
+      ball.checkBoundaries(intervalSpeed, paddle);
+      ball.draw(ctx, "fill");
     }
     
-    paddleInput(intervalSpeed);
-    drawPaddle(paddle);
+    paddle.input(intervalSpeed);
+    paddle.draw(ctx);
   }
   var interval = setInterval(refresh, intervalSpeed);
   
-  function drawCirc(obj, color, type){
-    ctx.beginPath();
-    ctx.arc(obj.x, obj.y, obj.r, 0, Math.PI*2, false);
-    switch(type){
-      case "stroke":
-        ctx.strokeStyle = color;
-        ctx.stroke();
-        break;
-      case "fill":
-        ctx.fillStyle = color;
-        ctx.fill();
-        break;
-      default:
-        break;
-    }
-    ctx.closePath();
-  }
-
   function drawText(text, w, h, color, type){
     ctx.font = "30px Arial";
     switch(type){
@@ -135,103 +247,15 @@ window.onload = () => {
         console.log("Unknown type.");
         break;
     }
-  } 
-  function drawPaddle(obj){
-    ctx.beginPath();
-    ctx.rect(obj.x, obj.y, obj.w, obj.h);
-    ctx.fillStyle = "black";
-    ctx.strokeStyle = "white";
-    ctx.fill();
-    ctx.stroke();
-    ctx.closePath();
   }
-  
-  function checkBoundaries(obj, dt){
-    //check left/right boundaries
-    if(obj.x + obj.dx < obj.r || obj.x + obj.dx > canvas.width - obj.r){
-      obj.dx = -obj.dx;
-      if(obj.getObject() === "ball")
-        obj.col = getRandomColor();
-    }
-    //check top boundaries
-    if(obj.y + obj.dy < obj.r){
-      obj.dy = -obj.dy;
-      
-      if(obj.getObject() === "ball")
-        obj.col = getRandomColor();
-    } 
-    else if(obj.y + obj.dy > canvas.height - obj.r){
-      //show button, set text to game over and disable link
-      document.getElementById("resButton").style.display = "block";
-      //document.getElementById("title").innerHTML = "GAME OVER";
-      document.getElementById("title").style.pointerEvents = "none"; 
-      obj.speed = 0;
-      document.removeEventListener("touchstart", touchStartHandler, false);
-      document.removeEventListener("touchmove", touchMoveHandler, false);
-      document.removeEventListener("touchend", touchEndHandler, false);
-      //reset function is attached to the button. loop technically continues until user presses restart
-    }
 
-    //check ball collision with paddle
-    if(AABBcollision(obj, paddle)){
-      calculateNewAngle(obj);
-      obj.col = getRandomColor();
-      updateHeadline();
-    }
-    
-    //update position
-    obj.x += obj.dx * dt * obj.speed;
-    obj.y += obj.dy * dt * obj.speed;
-  }
-  
-  function calculateNewAngle(obj){
-
-    var paddleCenter = paddle.x + (paddle.w / 2);
-    var distanceFromCenter = (paddle.x + (paddle.w / 2)) - (obj.x);
-  
-    var normalizeIntersect = distanceFromCenter / (paddle.w / 2);
-    var newBounceAngle = normalizeIntersect * (5*Math.PI/12);
-    
-    obj.dx = Math.sin(newBounceAngle);
-    obj.dy = -Math.cos(newBounceAngle);
-    obj.dx= -obj.dx;
-  }
-  
-  function calculateStartAngle(obj){
-    var newBounceAngle = getRndFloat(-1, 1) * (5*Math.PI/12);
-    
-    obj.dx = Math.sin(newBounceAngle);
-    obj.dy = -Math.cos(newBounceAngle);
-    obj.dx= -obj.dx;
-  }
-  
   function getRndFloat(min, max) {
     return Math.random() * (max - min) + min;
   }
-  
-  function AABBcollision(obj1, obj2){
-    if(obj1.x < obj2.x + obj2.w   &&
-        obj1.x + obj1.r > obj2.x &&
-        obj1.y < obj2.y + obj2.h  &&
-        obj1.y + obj1.r > obj2.y)
-      return true;
-    else
-      return false;
-  }
-  
   function reset(){
     document.location.reload();
     clearInterval(interval); //needed for chrome
-  }
-  
-  function getRandomColor(){
-    var letters = '0123456789ABCDEF';
-    let color = '#';
-    for (var i = 0; i < 6; i++){
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    return color;
-  }
+  } 
   
   function adjustFontSize(){    
     let headline = document.getElementById('title');
@@ -244,7 +268,7 @@ window.onload = () => {
       fontSize = parseInt(hlFontSize);
       headline.style.fontSize = (fontSize - 10) + 'px';
     }
-    //adjust font to available canvas width (for mobile)
+    //adjust font to available canvas width (for mobile or vertical)
     while(headline.clientWidth > canvas.width){
       hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
       fontSize = parseInt(hlFontSize);
@@ -296,7 +320,7 @@ window.onload = () => {
       leftPressed = true;
     else if(e.keyCode == 32 && ballAttached === true){
       console.log("Space pressed.");
-      calculateStartAngle(ball);
+      ball.calculateStartAngle();
       ballAttached = false;
     }
   }
@@ -312,19 +336,19 @@ window.onload = () => {
   //TOUCH CONTROLS
   function touchStartHandler(e){
     e.preventDefault();
-    paddle.x = e.touches[0].clientX - paddle.w / 2;
+    paddle.position.x = e.touches[0].clientX - paddle.w / 2;
   }
   function touchMoveHandler(e){
     e.preventDefault();
-    paddle.x = e.touches[0].clientX - paddle.w / 2;
-    if(paddle.x + paddle.w > canvas.width)
-        paddle.x = canvas.width - paddle.w;
-    else if(paddle.x < 0)
-        paddle.x = 0;
+    paddle.position.x = e.touches[0].clientX - paddle.w / 2;
+    if(paddle.position.x + paddle.w > canvas.width)
+        paddle.position.x = canvas.width - paddle.w;
+    else if(paddle.position.x < 0)
+        paddle.position.x = 0;
   }
   function touchEndHandler(e){
     if(ballAttached === true){
-      calculateStartAngle(ball);
+      ball.calculateStartAngle();
       ballAttached = false;
     }
     e.preventDefault();

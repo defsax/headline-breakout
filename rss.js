@@ -49,7 +49,8 @@
             if(title === 'Try Tiles' ||
               title === 'The Crossword, Vertex and More' ||
               title === 'Try Spelling Bee' ||
-              title === '')
+              title === '' ||
+              title === "null")
               return;
             else
               postArray.push({"title": title, "link": link});
