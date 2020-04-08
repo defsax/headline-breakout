@@ -15,10 +15,24 @@ window.onload = () => {
   //game active bool
   var ballAttached = true; 
   
+  //style
+  var fontSize = 0;
+  
+  //rss feeds
+  /*
+  * nytimes
+  * breitbart
+  * huffpo
+  * bbc
+  * cbc
+  * hackernews
+  */                                                    
+
   var feedURLS = [
     'http://feeds.bbci.co.uk/news/rss.xml',
     'https://www.huffpost.com/section/front-page/feed?x=1',
-    'https://www.yahoo.com/news/rss'
+    'https://www.cbc.ca/cmlink/rss-topstories',
+    'https://hnrss.org/frontpage'
   ];
   var postArray = window.fetchnews(feedURLS);
   
@@ -67,9 +81,10 @@ window.onload = () => {
     //round ball vars to nearest hundredth
     var xRounded = ball.x.toFixed(2);
     var yRounded = ball.y.toFixed(2);
-    drawText(xRounded.toString(), 10, 25, "black", "fill");
-    drawText(yRounded.toString(), 10, 50, "black", "fill");
-    drawText("Articles left: " + postArray.length.toString(), 10, 75, "black", "fill");
+    //drawText(xRounded.toString(), 10, 25, "black", "fill");
+    //drawText(yRounded.toString(), 10, 50, "black", "fill");
+    //drawText("Articles left: " + postArray.length.toString(), 10, 75, "black", "fill");
+    //drawText("Font Size: " + fontSize + "px", 10, 100, "black", "fill");
     
     if(ballAttached === true){
       ball.x = paddle.x + (paddle.w / 2);
@@ -78,7 +93,7 @@ window.onload = () => {
     }
     else{
       checkBoundaries(ball, intervalSpeed);
-      ball.col = getRandomColor(); //random color every frame
+      //ball.col = getRandomColor(); //random color every frame
       drawCirc(ball, ball.col, "fill");
     }
     
@@ -131,21 +146,14 @@ window.onload = () => {
     ctx.closePath();
   }
   
-  function paddleInput(dt){
-    if(rightPressed){
-      paddle.x += 1 * dt * paddle.speed;
-      if(paddle.x + paddle.w > canvas.width)
-        paddle.x = canvas.width - paddle.w;
-    }
-    else if(leftPressed){
-      paddle.x -= 1 * dt * paddle.speed;
-      if(paddle.x < 0)
-        paddle.x = 0;
-    }
-  }
-  
   function checkBoundaries(obj, dt){
-    //check top/bottom boundaries
+    //check left/right boundaries
+    if(obj.x + obj.dx < obj.r || obj.x + obj.dx > canvas.width - obj.r){
+      obj.dx = -obj.dx;
+      if(obj.getObject() === "ball")
+        obj.col = getRandomColor();
+    }
+    //check top boundaries
     if(obj.y + obj.dy < obj.r){
       obj.dy = -obj.dy;
       
@@ -155,34 +163,20 @@ window.onload = () => {
     else if(obj.y + obj.dy > canvas.height - obj.r){
       //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
-      document.getElementById("title").innerHTML = "GAME OVER";
+      //document.getElementById("title").innerHTML = "GAME OVER";
       document.getElementById("title").style.pointerEvents = "none"; 
       obj.speed = 0;
+      document.removeEventListener("touchstart", touchStartHandler, false);
+      document.removeEventListener("touchmove", touchMoveHandler, false);
+      document.removeEventListener("touchend", touchEndHandler, false);
       //reset function is attached to the button. loop technically continues until user presses restart
-    }
-    //check left/right boundaries
-    if(obj.x + obj.dx < obj.r || obj.x + obj.dx > canvas.width - obj.r){
-      obj.dx = -obj.dx;
-      if(obj.getObject() === "ball")
-        obj.col = getRandomColor();
     }
 
     //check ball collision with paddle
     if(AABBcollision(obj, paddle)){
       calculateNewAngle(obj);
       obj.col = getRandomColor();
-      if(postArray.length != 0){
-        let randPost = Math.floor(Math.random() * postArray.length);
-        document.getElementById('title').innerHTML = postArray[randPost].title;
-        document.getElementById('title').href = postArray[randPost].link;
-        postArray.splice(randPost, 1);
-        console.log(postArray);
-        
-      }
-      else{
-        document.getElementById('title').innerHTML = "";
-        document.getElementById('title').href = "";
-      }
+      updateHeadline();
     }
     
     //update position
@@ -239,7 +233,62 @@ window.onload = () => {
     return color;
   }
   
+  function adjustFontSize(){    
+    let headline = document.getElementById('title');
+    headline.style.fontSize = '250px';
+    let hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
+    
+    //adjust font to available canvas height
+    while(headline.clientHeight > canvas.height){
+      hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
+      fontSize = parseInt(hlFontSize);
+      headline.style.fontSize = (fontSize - 10) + 'px';
+    }
+    //adjust font to available canvas width (for mobile)
+    while(headline.clientWidth > canvas.width){
+      hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
+      fontSize = parseInt(hlFontSize);
+      headline.style.fontSize = (fontSize - 10) + 'px';
+    }
+  }
+  
+  function updateHeadline(){
+    let headline = document.getElementById('title');
+    //if news headlines are present in array
+    if(postArray.length != 0){
+      let randPost = Math.floor(Math.random() * postArray.length);
+      headline.innerHTML = postArray[randPost].title;
+      headline.href = postArray[randPost].link;
+      
+      console.log(postArray);
+      adjustFontSize();
+
+      postArray.splice(randPost, 1);
+    }
+    else{
+      //otherwise don't draw
+      document.getElementById('title').innerHTML = "";
+      document.getElementById('title').href = "";
+    }
+  }
+  
   //INPUT CONTROLS
+  
+  //PADDLE MOVEMENT/CHECKING
+  function paddleInput(dt){
+    if(rightPressed){
+      paddle.x += 1 * dt * paddle.speed;
+      if(paddle.x + paddle.w > canvas.width)
+        paddle.x = canvas.width - paddle.w;
+    }
+    else if(leftPressed){
+      paddle.x -= 1 * dt * paddle.speed;
+      if(paddle.x < 0)
+        paddle.x = 0;
+    }
+  }
+  
+  //KEYBOARD CONTROLS
   function keyDownHandler(e){
     if(e.key == "Right" || e.key == "ArrowRight")
       rightPressed = true;
@@ -259,6 +308,8 @@ window.onload = () => {
     else if(e.keyCode == 32)
       console.log("Space released.");
   }
+  
+  //TOUCH CONTROLS
   function touchStartHandler(e){
     e.preventDefault();
     paddle.x = e.touches[0].clientX - paddle.w / 2;
@@ -266,6 +317,10 @@ window.onload = () => {
   function touchMoveHandler(e){
     e.preventDefault();
     paddle.x = e.touches[0].clientX - paddle.w / 2;
+    if(paddle.x + paddle.w > canvas.width)
+        paddle.x = canvas.width - paddle.w;
+    else if(paddle.x < 0)
+        paddle.x = 0;
   }
   function touchEndHandler(e){
     if(ballAttached === true){
@@ -275,12 +330,3 @@ window.onload = () => {
     e.preventDefault();
   }
 }
-
-/*
- * nytimes
- * yahoo
- * huffpo
- * bbc
- * cbc?
- * fox?
-*/                                                    

@@ -17,6 +17,10 @@ h1{
   text-align: left;
   font-size: 5em;
 }
+body{
+  overflow: hidden;
+  font-family: Arial, Helvetica, sans-serif;
+}
 
 #resButton{
   z-index: 2;
@@ -24,7 +28,7 @@ h1{
   display: none;
   background-color: black;
   border: none;
-  color: white;
+  color: grey;
   text-align: center;
   padding: 0.5em;
   text-decoration: none;
@@ -36,9 +40,10 @@ h1{
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
+  font-family: Arial, Helvetica, sans-serif;
 }
 #resButton:hover{
-  color: red;
+  color: white;
 }
 
 a{
@@ -48,22 +53,23 @@ a{
   margin: auto auto;
   padding: 0.5em;
   box-sizing: border-box;
-  width: 100%;
+
   text-align: left;
-  font-size: 15vw;
+  font-size: 250px;
   text-decoration: none;
+  
 }
 a:link,a:visited,a:hover,a:active{
   color: black;
 }
+
+@media only screen and (max-width: 760px) {
+  a { font-size: 10vmin; }
+}
+
 .container{
-  z-index: 1;
-  position: absolute;
-  display: block;
-  margin: auto auto;
-  padding: 0.5em;
-  box-sizing: border-box;
-  width: 100%;
-  text-align: left;
-  font-size: 15vw;
+  overflow: auto;
+  word-wrap: break-word;
+  white-space: normal;
+  text-overflow: ellipsis;
 }
