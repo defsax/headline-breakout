@@ -27,6 +27,9 @@
         }
       }
     };
+    xhr.onerror = function(e){
+      console.error(xhr.statusText);
+    }
     xhr.open('GET', api + item, true);
     xhr.send();
   }
@@ -37,27 +40,36 @@
 
     fetch('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml')
     .then((response) => {
-      response.text().then((xmlTEXT) =>{
-        try{
-          let doc = DOMPARSER.parseFromString(xmlTEXT, "text/xml");
-          doc.querySelectorAll('item').forEach((item) => {
-            let i = item.querySelector.bind(item);
-            var title = !!i('title') ? i('title').textContent : '-';
-            var link = !!i('link') ? i('link').textContent: '-';
+      //fetch doesn't reject on http errors, so check that it's okay
+      if(response.ok){
+        response.text().then((xmlTEXT) =>{
+          console.log(xmlTEXT);
+          try{
             
-            //filter out nytimes non-headlines
-            if(title === 'Try Tiles' ||
-              title === 'The Crossword, Vertex and More' ||
-              title === 'Try Spelling Bee' ||
-              title === '' ||
-              title === "null")
-              return;
-            else
-              postArray.push({"title": title, "link": link});
-            
-          })
-        }catch(e){ console.error("Error in parsing feed."); }
-      })
+            let doc = DOMPARSER.parseFromString(xmlTEXT, "text/xml");
+            console.log(doc);
+            doc.querySelectorAll('item').forEach((item) => {
+              //for each item returned by the parser, assign then i as another queryselector searching for title and link
+              //let i = item.querySelector.bind(item);
+              //var title = !!i('title') ? i('title').textContent : '-';
+              //var link = !!i('link') ? i('link').textContent: '-';
+              
+              var title = item.querySelector('title').textContent;
+              var link = item.querySelector('link').textContent;
+              
+              //filter out nytimes non-headlines
+              if(title === 'Try Tiles' ||
+                title === 'The Crossword, Vertex and More' ||
+                title === 'Try Spelling Bee' ||
+                title === '' ||
+                title === "null")
+                return;
+              else
+                postArray.push({"title": title, "link": link});
+            })
+          }catch(e){ console.error("Error in parsing feed."); }
+        })
+      }else{ console.error("HTTP error. Unable to fetch resource."); }
     })
   }
   
