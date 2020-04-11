@@ -21,6 +21,7 @@ window.onload = () => {
   //rss feeds
   //nytimes, huffpo, bbc, cbc, hackernews
   var feedURLS = [
+    'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
     'http://feeds.bbci.co.uk/news/rss.xml',
     'https://www.huffpost.com/section/front-page/feed?x=1',
     'https://www.cbc.ca/cmlink/rss-topstories',
@@ -41,7 +42,7 @@ window.onload = () => {
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
   document.addEventListener("touchstart", touchStartHandler, false);
-  document.addEventListener("touchmove", touchMoveHandler, false);
+  document.addEventListener("touchmove", touchMoveHandler, { passive: false });
   document.addEventListener("touchend", touchEndHandler, false);
   document.getElementById("resButton").addEventListener("click", reset);
   
