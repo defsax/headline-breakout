@@ -53,6 +53,47 @@ window.onload = () => {
     alert("HI, I\'m a " + this.constructor.name + " at position (x: " + this.position.x + " y: " + this.position.y + ")");
   }
   
+  //bricks
+  function Bricks(){
+    this.rowCount = 3;
+    this.colCount = 5;
+    //this.w = 75;
+    //this.h = 20;
+    this.padding = 100;
+    this.offsetTop = 60;
+    this.offsetLeft = 60;
+    this.bArray = [];
+    
+    this.init = function(context){
+      for(let c = 0; c < this.colCount; c++){
+        this.bArray[c] = [];
+        for(let r = 0; r < this.rowCount; r++){
+          this.bArray[c][r] = { 
+            position : { x: 0, y: 0 },
+            w: 75, 
+            h: 20
+          };
+        }
+      }
+    }
+    
+    this.draw = function(context){
+      for(let c = 0; c < this.colCount; c++){
+        for(let r = 0; r < this.rowCount; r++){
+          let brickX = (c * (this.bArray[c][r].w + this.padding)) + this.offsetLeft;
+          let brickY = (r * (this.bArray[c][r].h + this.padding)) + this.offsetTop;
+          this.bArray[c][r].position.x = brickX;
+          this.bArray[c][r].position.y = brickY;
+          context.beginPath();
+          context.rect(brickX, brickY, this.bArray[c][r].w, this.bArray[c][r].h);
+          context.fillStyle = "blue";
+          context.fill();
+          context.closePath();
+        }
+      }
+    }
+  }
+  
   //paddle class
   function Paddle(x, y, w, h, speed){
     GameObject.call(this, x, y);
@@ -129,7 +170,7 @@ window.onload = () => {
       ctx.closePath();
     }
     
-    this.checkBoundaries = function(dt, pad){
+    this.checkBoundaries = function(dt, pad, brcks){
       //check left/right boundaries
       if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvas.width - this.radius){
         this.direction.x = -this.direction.x;
@@ -159,15 +200,66 @@ window.onload = () => {
         updateHeadline();
       }
       
+      //check ball collision with bricks
+      for(let c = 0; c < brcks.colCount; c++){
+        for(let r = 0; r < brcks.rowCount; r++){
+          let b = brcks.bArray[c][r];
+          if(this.AABBcollision(b)){
+            let top = b.position.y;
+            let bottom = b.position.y + b.h;
+            let left = b.position.x;
+            let right = b.position.x + b.w;
+            
+            this.randomizeColor();
+            
+            if(this.position.x + this.radius < left){
+              console.log("Left."); 
+              this.direction.x = -this.direction.x;
+              this.position.x = left - this.radius;
+              break;
+            }
+            if(this.position.x - this.radius > right){
+              console.log("Right.");
+              this.direction.x = -this.direction.x;
+              this.position.x = right + this.radius;
+              break;
+            }
+            if(this.position.y - this.radius < top){
+              console.log("Top.");
+              this.position.y = top - this.radius;
+              this.direction.y = -this.direction.y;
+              break;
+            }
+            if(this.position.y + this.radius > bottom){
+              console.log("Bottom");
+              this.position.y = bottom + this.radius;
+              this.direction.y = -this.direction.y;
+              break;
+            }
+            
+            
+            console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
+          }
+        }
+      }
+      
       //update position
       this.position.x += this.direction.x * dt * this.speed;
       this.position.y += this.direction.y * dt * this.speed;
     }
     
+    this.checkLeftRight = function(obj){
+      if(this.position.x + this.direction.x + this.radius > obj.position.x || 
+        this.position.x + this.direction.x - this.radius < obj.position.x + obj.w)
+        return true;
+      else
+        return false;
+    }
+    
     this.AABBcollision = function(obj){
-      if(this.position.x < obj.position.x + obj.w   &&
+      if(this.position.x - this.radius < obj.position.x + obj.w   &&
           this.position.x + this.radius > obj.position.x &&
-          this.position.y < obj.position.y + obj.h  &&
+          this.position.y - this.radius < obj.position.y + obj.h  &&
           this.position.y + this.radius > obj.position.y)
         return true;
       else
@@ -202,13 +294,20 @@ window.onload = () => {
   });
   
   
-  var paddle = new Paddle((canvas.width - 75) / 2, canvas.height - (10 * 3), 75, 10, 0.3);
+  var paddle = new Paddle((canvas.width - 75) / 2, 
+                          canvas.height - (10 * 3), 
+                          75, 10, 0.3);
   var ball = new Ball(20, 20, 10, 0.3);
   ball.randomizeColor();
+  
+  var bricks = new Bricks();
+  bricks.init(ctx);
 
   function refresh(){
     //refresh context
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    paddle.draw(ctx);
+    bricks.draw(ctx);
     
     //round ball vars to nearest hundredth
     //var xRounded = ball.x.toFixed(2);
@@ -224,12 +323,12 @@ window.onload = () => {
       ball.draw(ctx, "fill");
     }
     else{
-      ball.checkBoundaries(intervalSpeed, paddle);
+      ball.checkBoundaries(intervalSpeed, paddle, bricks);
       ball.draw(ctx, "fill");
     }
     
     paddle.input(intervalSpeed);
-    paddle.draw(ctx);
+
   }
   var interval = setInterval(refresh, intervalSpeed);
   
