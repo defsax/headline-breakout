@@ -259,6 +259,7 @@ window.onload = () => {
   } 
   
   function adjustFontSize(){    
+    //scale font to fit screen on paddle hit
     let headline = document.getElementById('title');
     headline.style.fontSize = '250px';
     let hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
