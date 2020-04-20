@@ -131,6 +131,7 @@ window.onload = () => {
     writable: true
   });
   
+  /*
   //ball class
   function Ball(x, y, r, speed){
     GameObject.call(this, x, y);
@@ -199,7 +200,7 @@ window.onload = () => {
         this.randomizeColor();
         updateHeadline();
       }
-      /*
+      
       //check ball collision with bricks
       for(let c = 0; c < brcks.colCount; c++){
         for(let r = 0; r < brcks.rowCount; r++){
@@ -241,7 +242,7 @@ window.onload = () => {
             console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
           }
         }
-      }*/
+      }
       
       //update position
       this.position.x += this.direction.x * dt * this.speed;
@@ -292,7 +293,7 @@ window.onload = () => {
     enumerable: false, 
     writable: true
   });
-  
+  */
   
   var paddle = new Paddle((canvas.width - 75) / 2, 
                           canvas.height - (10 * 3), 
@@ -304,45 +305,28 @@ window.onload = () => {
   bricks.init(ctx);
   
   
-  var paddle1 = new Paddle((canvas.width - 75) / 2, 
-                          canvas.height - (10 * 3), 
-                          75, 10, 0.3);
-  
-  var paddle2 = new Paddle((canvas.width - 75) / 2, 
-                          canvas.height - (10 * 4), 
-                          75, 10, 0.3);
-  
-  var paddle3 = new Paddle((canvas.width - 75) / 2, 
-                          canvas.height - (10 * 5), 
-                          75, 10, 0.3);
-  var ball1 = new Ball(20, 20, 10, 0.3);
-  
   var world = new World();
-  world.addObject(paddle1);
-  world.addObject(paddle2);
-  world.addObject(paddle3);
-  world.addObject(ball1);
-  world.listObjects();
-  world.draw();
-  //console.log(World);
+  world.addObject(paddle);
+  world.addObject(ball);
+  world.addObject(bricks);
   
   
 
   function refresh(){
     //refresh context
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    paddle.draw(ctx);
-    bricks.draw(ctx);
+    //ctx.clearRect(0, 0, canvas.width, canvas.height);
+    //paddle.draw(ctx);
+    //bricks.draw(ctx);
+    //ball.draw(ctx);
+    //world.loop();
     
     
     if(ballAttached === true){
       ball.position.x = paddle.position.x + (paddle.w / 2);
       ball.position.y = paddle.position.y - ball.radius;
-      ball.draw(ctx, "fill");
     }
     else{
       ball.checkBoundaries(intervalSpeed, paddle, bricks);
-      ball.draw(ctx, "fill");
     }
     
     paddle.input(intervalSpeed);
@@ -370,9 +354,7 @@ window.onload = () => {
     }
   }
 
-  function getRndFloat(min, max) {
-    return Math.random() * (max - min) + min;
-  }
+
   function reset(){
     document.location.reload();
     clearInterval(interval); //needed for chrome

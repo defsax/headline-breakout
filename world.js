@@ -1,14 +1,18 @@
 function World() {
   //private
   var objects = [];
-  var canvas2 = document.getElementById("myCanvas");
-  var ctx = canvas2.getContext("2d");
+  //canvas reference
+  var canvas = document.getElementById("myCanvas");
+  var ctx = canvas.getContext("2d");
+  canvas.width = document.body.clientWidth;
+  canvas.height = window.innerHeight;
   
-  //private method
+  //private methods
   var update = function(){
     console.log("Update func. Called method from inside World class");
   }
   var draw = function(){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < objects.length; i++){
       ctx.beginPath();
       objects[i].draw(ctx);
@@ -17,28 +21,14 @@ function World() {
     }
   }
   
-  //canvas reference
-  //var canvas2 = document.getElementById("myCanvas2");
-  //store rendering context
-  //var ctx = canvas2.getContext("2d");
+  //public methods
   this.addObject = function(obj){
     objects.push(obj);
   };
-  
-  this.draw = function(){
-    for(let i = 0; i < objects.length; i++){
-      ctx.beginPath();
-      objects[i].draw(ctx);
-      ctx.closePath();
-      console.log("Draw func");
-      update();
-    }
-  };
-  this.run = function(){
+  this.loop = function(){
     draw();
     update();
   };
-  
   this.listObjects = function(){
     if(objects){
       for(let i = 0; i < objects.length; i++){
