@@ -199,7 +199,7 @@ window.onload = () => {
         this.randomizeColor();
         updateHeadline();
       }
-      
+      /*
       //check ball collision with bricks
       for(let c = 0; c < brcks.colCount; c++){
         for(let r = 0; r < brcks.rowCount; r++){
@@ -218,19 +218,19 @@ window.onload = () => {
               this.position.x = left - this.radius;
               break;
             }
-            if(this.position.x - this.radius > right){
+            else if(this.position.x - this.radius > right){
               console.log("Right.");
               this.direction.x = -this.direction.x;
               this.position.x = right + this.radius;
               break;
             }
-            if(this.position.y - this.radius < top){
+            else if(this.position.y - this.radius < top){
               console.log("Top.");
               this.position.y = top - this.radius;
               this.direction.y = -this.direction.y;
               break;
             }
-            if(this.position.y + this.radius > bottom){
+            else if(this.position.y + this.radius > bottom){
               console.log("Bottom");
               this.position.y = bottom + this.radius;
               this.direction.y = -this.direction.y;
@@ -241,7 +241,7 @@ window.onload = () => {
             console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
           }
         }
-      }
+      }*/
       
       //update position
       this.position.x += this.direction.x * dt * this.speed;
@@ -302,6 +302,31 @@ window.onload = () => {
   
   var bricks = new Bricks();
   bricks.init(ctx);
+  
+  
+  var paddle1 = new Paddle((canvas.width - 75) / 2, 
+                          canvas.height - (10 * 3), 
+                          75, 10, 0.3);
+  
+  var paddle2 = new Paddle((canvas.width - 75) / 2, 
+                          canvas.height - (10 * 4), 
+                          75, 10, 0.3);
+  
+  var paddle3 = new Paddle((canvas.width - 75) / 2, 
+                          canvas.height - (10 * 5), 
+                          75, 10, 0.3);
+  var ball1 = new Ball(20, 20, 10, 0.3);
+  
+  var world = new World();
+  world.addObject(paddle1);
+  world.addObject(paddle2);
+  world.addObject(paddle3);
+  world.addObject(ball1);
+  world.listObjects();
+  world.draw();
+  //console.log(World);
+  
+  
 
   function refresh(){
     //refresh context
@@ -309,13 +334,6 @@ window.onload = () => {
     paddle.draw(ctx);
     bricks.draw(ctx);
     
-    //round ball vars to nearest hundredth
-    //var xRounded = ball.x.toFixed(2);
-    //var yRounded = ball.y.toFixed(2);
-    //drawText("Ball speed: " + ball.speed.toString(), 10, 25, "black", "fill");
-    //drawText("Interval speed: " + intervalSpeed, 10, 50, "black", "fill");
-    //drawText("Articles left: " + postArray.length.toString(), 10, 75, "black", "fill");
-    //drawText("Font Size: " + fontSize + "px", 10, 100, "black", "fill");
     
     if(ballAttached === true){
       ball.position.x = paddle.position.x + (paddle.w / 2);
@@ -328,9 +346,12 @@ window.onload = () => {
     }
     
     paddle.input(intervalSpeed);
-
+  
+    requestAnimationFrame(refresh);
   }
-  var interval = setInterval(refresh, intervalSpeed);
+  
+  requestAnimationFrame(refresh);
+  //var interval = setInterval(refresh, intervalSpeed);
   
   function drawText(text, w, h, color, type){
     ctx.font = "30px Arial";
