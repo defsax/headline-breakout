@@ -9,7 +9,7 @@ function World() {
   
   //private methods
   var update = function(){
-    console.log("Update func. Called method from inside World class");
+    objects[1].update();
   }
   var draw = function(){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -17,17 +17,19 @@ function World() {
       ctx.beginPath();
       objects[i].draw(ctx);
       ctx.closePath();
-      console.log("Draw func");
     }
   }
   
   //public methods
-  this.addObject = function(obj){
-    objects.push(obj);
-  };
   this.loop = function(){
     draw();
     update();
+    
+    var loopBind = this.loop.bind(this);
+    requestAnimationFrame(loopBind);
+  };
+  this.addObject = function(obj){
+    objects.push(obj);
   };
   this.listObjects = function(){
     if(objects){

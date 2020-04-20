@@ -53,253 +53,12 @@ window.onload = () => {
     alert("HI, I\'m a " + this.constructor.name + " at position (x: " + this.position.x + " y: " + this.position.y + ")");
   }
   
-  //bricks
-  function Bricks(){
-    this.rowCount = 3;
-    this.colCount = 5;
-    //this.w = 75;
-    //this.h = 20;
-    this.padding = 100;
-    this.offsetTop = 60;
-    this.offsetLeft = 60;
-    this.bArray = [];
-    
-    this.init = function(context){
-      for(let c = 0; c < this.colCount; c++){
-        this.bArray[c] = [];
-        for(let r = 0; r < this.rowCount; r++){
-          this.bArray[c][r] = { 
-            position : { x: 0, y: 0 },
-            w: 75, 
-            h: 20
-          };
-        }
-      }
-    }
-    
-    this.draw = function(context){
-      for(let c = 0; c < this.colCount; c++){
-        for(let r = 0; r < this.rowCount; r++){
-          let brickX = (c * (this.bArray[c][r].w + this.padding)) + this.offsetLeft;
-          let brickY = (r * (this.bArray[c][r].h + this.padding)) + this.offsetTop;
-          this.bArray[c][r].position.x = brickX;
-          this.bArray[c][r].position.y = brickY;
-          context.beginPath();
-          context.rect(brickX, brickY, this.bArray[c][r].w, this.bArray[c][r].h);
-          context.fillStyle = "blue";
-          context.fill();
-          context.closePath();
-        }
-      }
-    }
-  }
-  
-  //paddle class
-  function Paddle(x, y, w, h, speed){
-    GameObject.call(this, x, y);
-    this.w = w;
-    this.h = h;
-    this.speed = speed;
-    
-    this.draw = function(context){
-      context.beginPath();
-      context.rect(this.position.x, this.position.y, this.w, this.h);
-      context.fillStyle = "black";
-      context.strokeStyle = "black";
-      context.fill();
-      context.stroke();
-      context.closePath();
-    }
-    //PADDLE MOVEMENT/CHECKING
-    this.input = function(dt){
-      if(rightPressed){
-        this.position.x += 1 * dt * this.speed;
-        if(this.position.x + this.w > canvas.width)
-          this.position.x = canvas.width - this.w;
-      }
-      else if(leftPressed){
-        this.position.x -= 1 * dt * this.speed;
-        if(this.position.x < 0)
-          this.position.x = 0;
-      }
-    }
-  }
-  Paddle.prototype = Object.create(GameObject.prototype);
-  Object.defineProperty(Paddle.prototype, 'constructor', {
-    value: Paddle,
-    enumerable: false, 
-    writable: true
-  });
-  
-  /*
-  //ball class
-  function Ball(x, y, r, speed){
-    GameObject.call(this, x, y);
-    this.radius = r;
-    this.speed = speed;
-    this.direction = { x : 0.1, y : -0.1 };
-    
-    this.colour = 'black';
-    this.randomizeColor = function(){
-      var letters = '0123456789ABCDEF';
-      let color = '#';
-      for (var i = 0; i < 6; i++){
-        color += letters[Math.floor(Math.random() * 16)];
-      }
-      this.colour = color;
-    }
-    
-    this.draw = function(context, type){
-      ctx.beginPath();
-      ctx.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
-      switch(type){
-        case "stroke":
-          ctx.strokeStyle = this.colour;
-          ctx.stroke();
-          break;
-        case "fill":
-          ctx.fillStyle = this.colour;
-          ctx.stokeStyle = "black"
-          ctx.fill();
-          ctx.lineWidth = 3;
-          ctx.stroke();
-          ctx.lineWidth = 1;
-          break;
-        default:
-          break;
-      }
-      ctx.closePath();
-    }
-    
-    this.checkBoundaries = function(dt, pad, brcks){
-      //check left/right boundaries
-      if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvas.width - this.radius){
-        this.direction.x = -this.direction.x;
-        this.randomizeColor();
-      }
-      //check top boundaries
-      if(this.position.y + this.direction.y < this.radius){
-        this.direction.y = -this.direction.y;
-        this.randomizeColor();
-      } 
-      else if(this.position.y + this.direction.y > canvas.height - this.radius){
-        //show button, set text to game over and disable link
-        document.getElementById("resButton").style.display = "block";
-        document.getElementById("title").innerHTML = "GAME OVER";
-        document.getElementById("title").style.pointerEvents = "none"; 
-        this.speed = 0;
-        document.removeEventListener("touchstart", touchStartHandler, false);
-        document.removeEventListener("touchmove", touchMoveHandler, false);
-        document.removeEventListener("touchend", touchEndHandler, false);
-        //reset function is attached to the button. loop technically continues until user presses restart
-      }
-
-      //check ball collision with paddle
-      if(this.AABBcollision(pad)){
-        this.calculateNewAngle(pad);
-        this.randomizeColor();
-        updateHeadline();
-      }
-      
-      //check ball collision with bricks
-      for(let c = 0; c < brcks.colCount; c++){
-        for(let r = 0; r < brcks.rowCount; r++){
-          let b = brcks.bArray[c][r];
-          if(this.AABBcollision(b)){
-            let top = b.position.y;
-            let bottom = b.position.y + b.h;
-            let left = b.position.x;
-            let right = b.position.x + b.w;
-            
-            this.randomizeColor();
-            
-            if(this.position.x + this.radius < left){
-              console.log("Left."); 
-              this.direction.x = -this.direction.x;
-              this.position.x = left - this.radius;
-              break;
-            }
-            else if(this.position.x - this.radius > right){
-              console.log("Right.");
-              this.direction.x = -this.direction.x;
-              this.position.x = right + this.radius;
-              break;
-            }
-            else if(this.position.y - this.radius < top){
-              console.log("Top.");
-              this.position.y = top - this.radius;
-              this.direction.y = -this.direction.y;
-              break;
-            }
-            else if(this.position.y + this.radius > bottom){
-              console.log("Bottom");
-              this.position.y = bottom + this.radius;
-              this.direction.y = -this.direction.y;
-              break;
-            }
-            
-            
-            console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
-          }
-        }
-      }
-      
-      //update position
-      this.position.x += this.direction.x * dt * this.speed;
-      this.position.y += this.direction.y * dt * this.speed;
-    }
-    
-    this.checkLeftRight = function(obj){
-      if(this.position.x + this.direction.x + this.radius > obj.position.x || 
-        this.position.x + this.direction.x - this.radius < obj.position.x + obj.w)
-        return true;
-      else
-        return false;
-    }
-    
-    this.AABBcollision = function(obj){
-      if(this.position.x - this.radius < obj.position.x + obj.w   &&
-          this.position.x + this.radius > obj.position.x &&
-          this.position.y - this.radius < obj.position.y + obj.h  &&
-          this.position.y + this.radius > obj.position.y)
-        return true;
-      else
-        return false;
-    }
-    
-    this.calculateStartAngle = function(){
-      var newBounceAngle = getRndFloat(-1, 1) * (5*Math.PI/12);
-    
-      this.direction.x = Math.sin(newBounceAngle);
-      this.direction.y = -Math.cos(newBounceAngle);
-      this.direction.x = -this.direction.x;
-    }
-    
-    this.calculateNewAngle = function(pad){
-      var paddleCenter = pad.position.x + (pad.w / 2);
-      var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
-    
-      var normalizeIntersect = distanceFromCenter / (pad.w / 2);
-      var newBounceAngle = normalizeIntersect * (5*Math.PI/12);
-      
-      this.direction.x = Math.sin(newBounceAngle);
-      this.direction.y = -Math.cos(newBounceAngle);
-      this.direction.x = -this.direction.x;
-    }
-  }
-  Ball.prototype = Object.create(GameObject.prototype);
-  Object.defineProperty(Ball.prototype, 'constructor', {
-    value: Ball,
-    enumerable: false, 
-    writable: true
-  });
-  */
-  
   var paddle = new Paddle((canvas.width - 75) / 2, 
                           canvas.height - (10 * 3), 
                           75, 10, 0.3);
   var ball = new Ball(20, 20, 10, 0.3);
   ball.randomizeColor();
+  ball.paddleReference = paddle;
   
   var bricks = new Bricks();
   bricks.init(ctx);
@@ -311,30 +70,14 @@ window.onload = () => {
   world.addObject(bricks);
   
   
-
+  /*
   function refresh(){
-    //refresh context
-    //ctx.clearRect(0, 0, canvas.width, canvas.height);
-    //paddle.draw(ctx);
-    //bricks.draw(ctx);
-    //ball.draw(ctx);
-    //world.loop();
-    
-    
-    if(ballAttached === true){
-      ball.position.x = paddle.position.x + (paddle.w / 2);
-      ball.position.y = paddle.position.y - ball.radius;
-    }
-    else{
-      ball.checkBoundaries(intervalSpeed, paddle, bricks);
-    }
-    
+    world.loop();
     paddle.input(intervalSpeed);
-  
     requestAnimationFrame(refresh);
-  }
+  }*/
   
-  requestAnimationFrame(refresh);
+  requestAnimationFrame(function(){world.loop();});
   //var interval = setInterval(refresh, intervalSpeed);
   
   function drawText(text, w, h, color, type){
@@ -422,10 +165,10 @@ window.onload = () => {
       rightPressed = true;
     else if(e.key == "Left" || e.key == "ArrowLeft")
       leftPressed = true;
-    else if(e.keyCode == 32 && ballAttached === true){
+    else if(e.keyCode == 32 && ball.attached === true){
       console.log("Space pressed.");
       ball.calculateStartAngle();
-      ballAttached = false;
+      ball.attached = false;
     }
   }
   function keyUpHandler(e){
@@ -451,9 +194,9 @@ window.onload = () => {
         paddle.position.x = 0;
   }
   function touchEndHandler(e){
-    if(ballAttached === true){
+    if(ball.attached === true){
       ball.calculateStartAngle();
-      ballAttached = false;
+      ball.attached = false;
     }
     e.preventDefault();
   }

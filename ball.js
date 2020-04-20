@@ -1,10 +1,13 @@
 //ball class
 function Ball(x, y, r, speed){
-  //GameObject.call(this, x, y);
-  this.position = { x: x, y: y };
+  this.position = { x, y };
   this.radius = r;
   this.speed = speed;
   this.direction = { x : 0.1, y : -0.1 };
+  this.attached = true;
+  
+  //a holder for reference to paddle, compound object
+  this.paddleReference;
   
   this.colour = 'black';
   this.randomizeColor = function(){
@@ -19,11 +22,20 @@ function Ball(x, y, r, speed){
   this.draw = function(context){
     context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
     context.fillStyle = this.colour;
-    context.stokeStyle = "black"
     context.fill();
     context.lineWidth = 3;
+    context.stokeStyle = "black"
     context.stroke();
     context.lineWidth = 1;
+  }
+  this.update = function(){
+    if(this.attached === true){
+      this.position.x = this.paddleReference.position.x + (this.paddleReference.w / 2);
+      this.position.y = this.paddleReference.position.y - this.radius;
+    }
+    else{
+      this.checkBoundaries(intervalSpeed, this.paddleReference, bricks, canvas);
+    }
   }
   
   this.checkBoundaries = function(dt, pad, brcks, canvas){
