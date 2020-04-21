@@ -30,10 +30,30 @@ function World() {
     }
   }
   
+  var drawText = function(text, w, h, color, type){
+    ctx.font = "30px Arial";
+    switch(type){
+      case "stroke":
+        ctx.strokeStyle = color;
+        ctx.strokeText(text, w, h);
+        break;
+      case "fill":
+        ctx.fillStyle = color;
+        ctx.fillText(text, w, h);
+        break;
+      default:
+        console.log("Unknown type.");
+        break;
+    }
+  }
+  
+  
+  
   //public methods
   this.loop = function(){
     now = utils.timeStamp();
-    dt = (now - last) / 1000; 
+    dt = (now - last) / 500; 
+    drawText(dt, 1000, 100, "black", "fill");
     
     update(dt);
     draw(dt);

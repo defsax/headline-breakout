@@ -9,7 +9,7 @@ function Bricks(){
   this.offsetLeft = 60;
   this.bArray = [];
   
-  this.init = function(context){
+  this.init = function(){
     for(let c = 0; c < this.colCount; c++){
       this.bArray[c] = [];
       for(let r = 0; r < this.rowCount; r++){

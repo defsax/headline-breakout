@@ -18,7 +18,7 @@ function Paddle(x, y, w, h, speed){
   }
   
   this.update = function(dt, canvas){
-    this.input(dt, canvas);
+    this.input(dt, canvas); 
   }
   
   //PADDLE MOVEMENT/CHECKING

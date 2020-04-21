@@ -1,19 +1,4 @@
 window.onload = () => {
-  //reference canvas
-  var canvas = document.getElementById("myCanvas");
-  //store rendering context
-  var ctx = canvas.getContext("2d");
-  ctx.imageSmoothingEnabled = false;
-  
-  //input vars
-  var rightPressed = false;
-  var leftPressed = false;
-  
-  //timing var
-  var intervalSpeed = 10;
-  
-  //game active bool
-  var ballAttached = true; 
   
   //style
   var fontSize = 0;
@@ -28,15 +13,6 @@ window.onload = () => {
     'https://hnrss.org/frontpage'
   ];
   var postArray = window.fetchnews(feedURLS);
-  
-  //watch these...
-  canvas.width = document.body.clientWidth;
-  //canvas.height = document.body.clientHeight;
-  canvas.height = window.innerHeight;
-  console.log("canvas.width: " + canvas.width);
-  console.log("canvas.height: " + canvas.height);
-  
-  //document.addEventListener("DOMContentLoaded", processHeadlines, false);
   
   //input event listeners
   document.addEventListener("keydown", keyDownHandler, false);
@@ -53,12 +29,12 @@ window.onload = () => {
     alert("HI, I\'m a " + this.constructor.name + " at position (x: " + this.position.x + " y: " + this.position.y + ")");
   }
   
-  var paddle = new Paddle((canvas.width - 75) / 2, 
-                          canvas.height - (10 * 3), 
+  var paddle = new Paddle((document.body.clientWidth - 75) / 2, 
+                          window.innerHeight - (10 * 3), 
                           75, 10, 150);
   
   var bricks = new Bricks();
-  bricks.init(ctx);
+  bricks.init();
   
   var ball = new Ball(20, 20, 10, 50);
   ball.randomizeColor();
@@ -79,29 +55,10 @@ window.onload = () => {
   }*/
   
   requestAnimationFrame(function(){world.loop();});
-  //var interval = setInterval(refresh, intervalSpeed);
-  
-  function drawText(text, w, h, color, type){
-    ctx.font = "30px Arial";
-    switch(type){
-      case "stroke":
-        ctx.strokeStyle = color;
-        ctx.strokeText(text, w, h);
-        break;
-      case "fill":
-        ctx.fillStyle = color;
-        ctx.fillText(text, w, h);
-        break;
-      default:
-        console.log("Unknown type.");
-        break;
-    }
-  }
-
 
   function reset(){
     document.location.reload();
-    clearInterval(interval); //needed for chrome
+    //clearInterval(interval); //needed for chrome
   } 
   
   function adjustFontSize(){    
