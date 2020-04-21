@@ -22,6 +22,10 @@ function Bricks(){
     }
   }
   
+  this.update = function(dt, canvas){
+    //console.log("bricks update");
+  }
+  
   this.draw = function(context){
     for(let c = 0; c < this.colCount; c++){
       for(let r = 0; r < this.rowCount; r++){

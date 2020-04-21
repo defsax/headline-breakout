@@ -4,5 +4,8 @@ var utils = {
   },
   getRndFloat: function(min, max) {
     return Math.random() * (max - min) + min;
+  },
+  timeStamp: function(){
+    return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
   }
 }

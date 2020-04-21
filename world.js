@@ -6,12 +6,22 @@ function World() {
   var ctx = canvas.getContext("2d");
   canvas.width = document.body.clientWidth;
   canvas.height = window.innerHeight;
+  var cvs = { width: canvas.width, height: canvas.height };
+  
+  //timing vars
+  var now;
+  var dt = 0;
+  last = utils.timeStamp();
   
   //private methods
-  var update = function(){
-    objects[1].update();
+  var update = function(dt){
+    if(objects){
+      for(let i = 0; i < objects.length; i++){
+        objects[i].update(dt, cvs);
+      }
+    }
   }
-  var draw = function(){
+  var draw = function(dt){
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     for(let i = 0; i < objects.length; i++){
       ctx.beginPath();
@@ -22,8 +32,13 @@ function World() {
   
   //public methods
   this.loop = function(){
-    draw();
-    update();
+    now = utils.timeStamp();
+    dt = (now - last) / 1000; 
+    
+    update(dt);
+    draw(dt);
+    
+    last = now;
     
     var loopBind = this.loop.bind(this);
     requestAnimationFrame(loopBind);

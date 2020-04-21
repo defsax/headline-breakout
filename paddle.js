@@ -4,6 +4,8 @@ function Paddle(x, y, w, h, speed){
   this.w = w;
   this.h = h;
   this.speed = speed;
+  this.rightPressed = false;
+  this.leftPressed = false;
   
   this.draw = function(context){
     context.beginPath();
@@ -14,15 +16,20 @@ function Paddle(x, y, w, h, speed){
     context.stroke();
     context.closePath();
   }
+  
+  this.update = function(dt, canvas){
+    this.input(dt, canvas);
+  }
+  
   //PADDLE MOVEMENT/CHECKING
-  this.input = function(dt){
-    if(rightPressed){
-      this.position.x += 1 * dt * this.speed;
+  this.input = function(dt, canvas){
+    if(this.rightPressed){
+      this.position.x += dt * this.speed;
       if(this.position.x + this.w > canvas.width)
         this.position.x = canvas.width - this.w;
     }
-    else if(leftPressed){
-      this.position.x -= 1 * dt * this.speed;
+    else if(this.leftPressed){
+      this.position.x -= dt * this.speed;
       if(this.position.x < 0)
         this.position.x = 0;
     }

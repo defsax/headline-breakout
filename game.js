@@ -55,14 +55,15 @@ window.onload = () => {
   
   var paddle = new Paddle((canvas.width - 75) / 2, 
                           canvas.height - (10 * 3), 
-                          75, 10, 0.3);
-  var ball = new Ball(20, 20, 10, 0.3);
-  ball.randomizeColor();
-  ball.paddleReference = paddle;
+                          75, 10, 150);
   
   var bricks = new Bricks();
   bricks.init(ctx);
   
+  var ball = new Ball(20, 20, 10, 50);
+  ball.randomizeColor();
+  ball.paddleReference = paddle;
+  ball.bricksReference = bricks;
   
   var world = new World();
   world.addObject(paddle);
@@ -145,26 +146,12 @@ window.onload = () => {
   
   //INPUT CONTROLS
   
-  //PADDLE MOVEMENT/CHECKING
-  function paddleInput(dt){
-    if(rightPressed){
-      paddle.x += 1 * dt * paddle.speed;
-      if(paddle.x + paddle.w > canvas.width)
-        paddle.x = canvas.width - paddle.w;
-    }
-    else if(leftPressed){
-      paddle.x -= 1 * dt * paddle.speed;
-      if(paddle.x < 0)
-        paddle.x = 0;
-    }
-  }
-  
   //KEYBOARD CONTROLS
   function keyDownHandler(e){
     if(e.key == "Right" || e.key == "ArrowRight")
-      rightPressed = true;
+      paddle.rightPressed = true;
     else if(e.key == "Left" || e.key == "ArrowLeft")
-      leftPressed = true;
+      paddle.leftPressed = true;
     else if(e.keyCode == 32 && ball.attached === true){
       console.log("Space pressed.");
       ball.calculateStartAngle();
@@ -173,9 +160,9 @@ window.onload = () => {
   }
   function keyUpHandler(e){
     if(e.key == "Right" || e.key == "ArrowRight")
-      rightPressed = false;
+      paddle.rightPressed = false;
     else if(e.key == "Left" || e.key == "ArrowLeft")
-      leftPressed = false;
+      paddle.leftPressed = false;
     else if(e.keyCode == 32)
       console.log("Space released.");
   }

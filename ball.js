@@ -6,8 +6,9 @@ function Ball(x, y, r, speed){
   this.direction = { x : 0.1, y : -0.1 };
   this.attached = true;
   
-  //a holder for reference to paddle, compound object
+  //a holder for reference to paddle and bricks, compound objects
   this.paddleReference;
+  this.bricksReference;
   
   this.colour = 'black';
   this.randomizeColor = function(){
@@ -28,13 +29,13 @@ function Ball(x, y, r, speed){
     context.stroke();
     context.lineWidth = 1;
   }
-  this.update = function(){
+  this.update = function(dt, canvas){
     if(this.attached === true){
       this.position.x = this.paddleReference.position.x + (this.paddleReference.w / 2);
       this.position.y = this.paddleReference.position.y - this.radius;
     }
     else{
-      this.checkBoundaries(intervalSpeed, this.paddleReference, bricks, canvas);
+      this.checkBoundaries(dt, this.paddleReference, this.bricksReference, canvas);
     }
   }
   
@@ -55,9 +56,9 @@ function Ball(x, y, r, speed){
       document.getElementById("title").innerHTML = "GAME OVER";
       document.getElementById("title").style.pointerEvents = "none"; 
       this.speed = 0;
-      document.removeEventListener("touchstart", touchStartHandler, false);
-      document.removeEventListener("touchmove", touchMoveHandler, false);
-      document.removeEventListener("touchend", touchEndHandler, false);
+      //document.removeEventListener("touchstart", touchStartHandler, false);
+      //document.removeEventListener("touchmove", touchMoveHandler, false);
+      //document.removeEventListener("touchend", touchEndHandler, false);
       //reset function is attached to the button. loop technically continues until user presses restart
     }
 
