@@ -1,5 +1,6 @@
 var Headline = (function(){
   var feeds = [];
+  /*
   var feedURLS = [
     'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
     'http://feeds.bbci.co.uk/news/rss.xml',
@@ -8,12 +9,15 @@ var Headline = (function(){
     'https://hnrss.org/frontpage'
   ];
   var postArray = window.fetchnews(feedURLS);
-  
+*/
+  var headlineList = [];
   
   return {
     initialize: function(){
-      if(feeds){
+      if(feeds.length > 0){
         console.log("Feeds.");
+        headlineList = window.fetchnews(feeds);
+        console.log(headlineList);
       }
       else{
         console.log("No feeds.");
@@ -22,18 +26,18 @@ var Headline = (function(){
     addFeed: function(feedURL){
       feeds.push(feedURL);
     },
-    updateHeadline: function(){
-      let headline = document.getElementById('title');
+    updateHeadline: function(element){
+      let headline = document.getElementById(element);
       //if news headlines are present in array
-      if(postArray.length != 0){
-        let randPost = Math.floor(Math.random() * postArray.length);
-        headline.innerHTML = postArray[randPost].title;
-        headline.href = postArray[randPost].link;
+      if(headlineList.length != 0){
+        let randPost = Math.floor(Math.random() * headlineList.length);
+        headline.innerHTML = headlineList[randPost].title;
+        headline.href = headlineList[randPost].link;
         
-        console.log(postArray);
-        adjustFontSize();
+        console.log(headlineList);
+        utils.adjustFontSize(element);
 
-        postArray.splice(randPost, 1);
+        headlineList.splice(randPost, 1);
       }
       else{
         //otherwise don't draw

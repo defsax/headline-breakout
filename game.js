@@ -1,19 +1,5 @@
 window.onload = () => {
   
-  //style
-  var fontSize = 0;
-  
-  //rss feeds
-  //nytimes, huffpo, bbc, cbc, hackernews
-  var feedURLS = [
-    'https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml',
-    'http://feeds.bbci.co.uk/news/rss.xml',
-    'https://www.huffpost.com/section/front-page/feed?x=1',
-    'https://www.cbc.ca/cmlink/rss-topstories',
-    'https://hnrss.org/frontpage'
-  ];
-  var postArray = window.fetchnews(feedURLS);
-  
   //input event listeners
   document.addEventListener("keydown", keyDownHandler, false);
   document.addEventListener("keyup", keyUpHandler, false);
@@ -39,51 +25,16 @@ window.onload = () => {
   world.addObject(ball);
   world.addObject(bricks);
   
-  Headline.initialize();
+  //rss feeds
+  //nytimes, huffpo, bbc, cbc, hackernews
   Headline.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
+  Headline.addFeed('http://feeds.bbci.co.uk/news/rss.xml');
+  Headline.addFeed('https://www.huffpost.com/section/front-page/feed?x=1');
+  Headline.addFeed('https://www.cbc.ca/cmlink/rss-topstories');
+  Headline.addFeed('https://hnrss.org/frontpage');
   Headline.initialize();
   
   requestAnimationFrame(function(){world.loop();});
-  
-  function adjustFontSize(){    
-    //scale font to fit screen on paddle hit
-    let headline = document.getElementById('title');
-    headline.style.fontSize = '250px';
-    let hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
-    
-    //adjust font to available canvas height
-    while(headline.clientHeight > canvas.height){
-      hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
-      fontSize = parseInt(hlFontSize);
-      headline.style.fontSize = (fontSize - 10) + 'px';
-    }
-    //adjust font to available canvas width (for mobile or vertical)
-    while(headline.clientWidth > canvas.width){
-      hlFontSize = window.getComputedStyle(headline, null).getPropertyValue('font-size');
-      fontSize = parseInt(hlFontSize);
-      headline.style.fontSize = (fontSize - 10) + 'px';
-    }
-  }
-  
-  function updateHeadline(){
-    let headline = document.getElementById('title');
-    //if news headlines are present in array
-    if(postArray.length != 0){
-      let randPost = Math.floor(Math.random() * postArray.length);
-      headline.innerHTML = postArray[randPost].title;
-      headline.href = postArray[randPost].link;
-      
-      console.log(postArray);
-      adjustFontSize();
-
-      postArray.splice(randPost, 1);
-    }
-    else{
-      //otherwise don't draw
-      document.getElementById('title').innerHTML = "";
-      document.getElementById('title').href = "";
-    }
-  }
   
   //INPUT CONTROLS
   
