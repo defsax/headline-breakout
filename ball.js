@@ -148,7 +148,7 @@ function Ball(x, y, r, speed){
     var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
   
     var normalizeIntersect = distanceFromCenter / (pad.w / 2);
-    var newBounceAngle = normalizeIntersect * (5*Math.PI/12);
+    var newBounceAngle = normalizeIntersect * (5*Math.PI/17); //12
     
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);

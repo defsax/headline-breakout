@@ -15,13 +15,13 @@ var Headline = (function(){
   return {
     initialize: function(){
       if(feeds.length > 0){
-        console.log("Feeds.");
+        //console.log("Feeds.");
         headlineList = window.fetchnews(feeds);
-        console.log(headlineList);
       }
       else{
         console.log("No feeds.");
       }
+      console.log(headlineList.length + " headlines.");
     },
     addFeed: function(feedURL){
       feeds.push(feedURL);
