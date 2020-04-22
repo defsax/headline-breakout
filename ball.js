@@ -66,7 +66,7 @@ function Ball(x, y, r, speed){
     if(this.AABBcollision(pad)){
       this.calculateNewAngle(pad);
       this.randomizeColor();
-      updateHeadline();
+      //updateHeadline();
     }
     /*
     //check ball collision with bricks

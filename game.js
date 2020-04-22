@@ -20,23 +20,16 @@ window.onload = () => {
   document.addEventListener("touchstart", touchStartHandler, false);
   document.addEventListener("touchmove", touchMoveHandler, { passive: false });
   document.addEventListener("touchend", touchEndHandler, false);
-  document.getElementById("resButton").addEventListener("click", reset);
-  
-  function GameObject(x, y){
-    this.position = { x, y };
-  }
-  GameObject.prototype.greeting = function(){
-    alert("HI, I\'m a " + this.constructor.name + " at position (x: " + this.position.x + " y: " + this.position.y + ")");
-  }
+  document.getElementById("resButton").addEventListener("click", utils.reset);
   
   var paddle = new Paddle((document.body.clientWidth - 75) / 2, 
                           window.innerHeight - (10 * 3), 
-                          75, 10, 150);
+                          75, 10, 300);
   
   var bricks = new Bricks();
   bricks.init();
   
-  var ball = new Ball(20, 20, 10, 50);
+  var ball = new Ball(20, 20, 10, 150);
   ball.randomizeColor();
   ball.paddleReference = paddle;
   ball.bricksReference = bricks;
@@ -46,20 +39,11 @@ window.onload = () => {
   world.addObject(ball);
   world.addObject(bricks);
   
-  
-  /*
-  function refresh(){
-    world.loop();
-    paddle.input(intervalSpeed);
-    requestAnimationFrame(refresh);
-  }*/
+  Headline.initialize();
+  Headline.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
+  Headline.initialize();
   
   requestAnimationFrame(function(){world.loop();});
-
-  function reset(){
-    document.location.reload();
-    //clearInterval(interval); //needed for chrome
-  } 
   
   function adjustFontSize(){    
     //scale font to fit screen on paddle hit

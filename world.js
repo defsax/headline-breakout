@@ -52,11 +52,13 @@ function World() {
   //public methods
   this.loop = function(){
     now = utils.timeStamp();
-    dt = (now - last) / 500; 
-    drawText(dt, 1000, 100, "black", "fill");
+    dt = (now - last) / 1000;
     
     update(dt);
     draw(dt);
+    
+    //visualize deltatime
+    drawText(dt.toString(), 10, 25, "black", "fill");
     
     last = now;
     

@@ -7,5 +7,8 @@ var utils = {
   },
   timeStamp: function(){
     return window.performance && window.performance.now ? window.performance.now() : new Date().getTime();
+  },
+  reset: function(){
+    document.location.reload();
   }
 }
