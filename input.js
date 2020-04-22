@@ -11,7 +11,7 @@ export default function InputHandler(paddle, ball){
     document.getElementById("resButton").addEventListener("click", utils.reset);
   }
   
-   //INPUT CONTROLS
+  //INPUT CONTROLS
   
   //KEYBOARD CONTROLS
   var keyDownHandler = function(e){
