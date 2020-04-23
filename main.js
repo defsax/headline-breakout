@@ -1,27 +1,13 @@
-import InputHandler from "./input.js";
+import World from './world.js';
+
+//canvas reference
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d");
+canvas.width = document.body.clientWidth;
+canvas.height = window.innerHeight;
 
 //fit initial message to screen size
 utils.adjustFontSize('title');
-
-var paddle = new Paddle((document.body.clientWidth - 75) / 2, 
-                        window.innerHeight - (10 * 3), 
-                        75, 10, 300);
-
-var bricks = new Bricks();
-bricks.init(document.body.clientWidth, window.innerHeight);
-
-var ball = new Ball(20, 20, 10, 150);
-ball.randomizeColor();
-ball.paddleReference = paddle;
-ball.bricksReference = bricks;
-
-var world = new World();
-world.addObject(paddle);
-world.addObject(ball);
-world.addObject(bricks);
-
-var inputHandler = new InputHandler(paddle, ball);
-inputHandler.initialize();
 
 //rss feeds
 //nytimes, huffpo, bbc, cbc, hackernews
@@ -32,5 +18,33 @@ Headline.addFeed('https://www.cbc.ca/cmlink/rss-topstories');
 Headline.addFeed('https://hnrss.org/frontpage');
 Headline.initialize();
 
-requestAnimationFrame(function(){world.loop();});
+
+var world = new World(canvas.width, canvas.height);
+world.start();
+
+
+//timing vars
+var now;
+var dt = 0;
+var last = utils.timeStamp();
+
+function gameLoop(){
+  now = utils.timeStamp();
+  dt = (now - last) / 1000;
+  
+  if(!world.gameOver){
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    world.update(dt);
+    world.draw(ctx);
+    
+    //visualize deltatime
+    world.drawText(dt.toString(), 10, 25, "black", "fill", ctx);
+    
+    last = now;
+    
+    requestAnimationFrame(gameLoop);
+  }
+};
+requestAnimationFrame(gameLoop);
 

@@ -1,36 +1,17 @@
-function World() {
-  //private
+import Ball from './ball.js';
+import Paddle from './paddle.js';
+import Bricks from './bricks.js';
+import InputHandler from './input.js';
+
+export default function World(w, h) {
+  //private variables
   var objects = [];
   //canvas reference
-  var canvas = document.getElementById("myCanvas");
-  var ctx = canvas.getContext("2d");
-  canvas.width = document.body.clientWidth;
-  canvas.height = window.innerHeight;
-  var cvs = { width: canvas.width, height: canvas.height };
+  var screenDimensions = { width: w, height: h };
   
-  //timing vars
-  var now;
-  var dt = 0;
-  last = utils.timeStamp();
+  this.gameOver = false;
   
-  //private methods
-  var update = function(dt){
-    if(objects){
-      for(let i = 0; i < objects.length; i++){
-        objects[i].update(dt, cvs);
-      }
-    }
-  }
-  var draw = function(dt){
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for(let i = 0; i < objects.length; i++){
-      ctx.beginPath();
-      objects[i].draw(ctx);
-      ctx.closePath();
-    }
-  }
-  
-  var drawText = function(text, w, h, color, type){
+  this.drawText = function(text, w, h, color, type, ctx){
     ctx.font = "30px Arial";
     switch(type){
       case "stroke":
@@ -47,24 +28,30 @@ function World() {
     }
   }
   
-  
-  
   //public methods
-  this.loop = function(){
-    now = utils.timeStamp();
-    dt = (now - last) / 1000;
+  this.start = function(){
+    this.ball = new Ball(this, 20, 20, 10, 150);
+    this.ball.randomizeColor();
     
-    update(dt);
-    draw(dt);
+    this.paddle = new Paddle(this, 75, 10, 300);
     
-    //visualize deltatime
-    drawText(dt.toString(), 10, 25, "black", "fill");
+    this.bricks = new Bricks(this);
+    this.bricks.init();
     
-    last = now;
+    objects.push(this.ball);
+    objects.push(this.paddle);
+    objects.push(this.bricks);
     
-    var loopBind = this.loop.bind(this);
-    requestAnimationFrame(loopBind);
+    this.inputHandler = new InputHandler(this);
+    this.inputHandler.initialize();
   };
+  this.update = function(dt){
+    objects.forEach(object => object.update(dt));
+  };
+  this.draw = function(ctx){
+    objects.forEach(object => object.draw(ctx));
+  };
+  
   this.addObject = function(obj){
     objects.push(obj);
   };
@@ -75,4 +62,7 @@ function World() {
       }
     }
   };  
+  this.getScreenDimensions = function(){ 
+    return screenDimensions; 
+  };
 }

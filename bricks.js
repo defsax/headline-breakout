@@ -1,7 +1,7 @@
 //bricks
-function Bricks(){
-  var gameWidth = 0;
-  var gameHeight = 0;
+export default function Bricks(gameWorld){
+  var gameWidth = gameWorld.getScreenDimensions.width;
+  var gameHeight = gameWorld.getScreenDimensions.height;
   this.rowCount = 3;
   this.colCount = 5;
   //this.w = 75;
@@ -12,9 +12,7 @@ function Bricks(){
   this.offsetRight = 10;
   this.bArray = [];
   
-  this.init = function(width, height){
-    gameWidth = width;
-    gameHeight = height;
+  this.init = function(){
     for(let c = 0; c < this.colCount; c++){
       this.bArray[c] = [];
       for(let r = 0; r < this.rowCount; r++){
@@ -27,7 +25,7 @@ function Bricks(){
     }
   }
   
-  this.update = function(dt, canvas){
+  this.update = function(dt){
     //console.log("bricks update");
   }
   
@@ -48,5 +46,6 @@ function Bricks(){
         context.closePath();
       }
     }
+    //console.log("Bricks draw.");
   }
 }

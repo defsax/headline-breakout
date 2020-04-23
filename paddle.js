@@ -1,6 +1,8 @@
 //paddle class
-function Paddle(x, y, w, h, speed){
-  this.position = { x, y };
+export default function Paddle(gameWorld, w, h, speed){
+  var canvasDimensions = gameWorld.getScreenDimensions();
+  
+  this.position = { x: (canvasDimensions.width - 75) / 2, y: canvasDimensions.height - (10 * 3) };
   this.w = w;
   this.h = h;
   this.speed = speed;
@@ -15,18 +17,21 @@ function Paddle(x, y, w, h, speed){
     context.fill();
     context.stroke();
     context.closePath();
+    
+    //console.log("Paddle draw.");
   }
   
-  this.update = function(dt, canvas){
-    this.input(dt, canvas); 
+  this.update = function(dt){
+    this.input(dt); 
+    //console.log("Paddle update.");
   }
   
   //PADDLE MOVEMENT/CHECKING
-  this.input = function(dt, canvas){
+  this.input = function(dt){
     if(this.rightPressed){
       this.position.x += dt * this.speed;
-      if(this.position.x + this.w > canvas.width)
-        this.position.x = canvas.width - this.w;
+      if(this.position.x + this.w > canvasDimensions.width)
+        this.position.x = canvasDimensions.width - this.w;
     }
     else if(this.leftPressed){
       this.position.x -= dt * this.speed;

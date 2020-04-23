@@ -1,14 +1,33 @@
-export default function InputHandler(paddle, ball){
+export default function InputHandler(gameWorld){
   
   this.initialize = function(){
     //input event listeners
-    document.addEventListener("keydown", keyDownHandler, false);
     
+    //KEY LISTENERS
+    document.addEventListener("keydown", keyDownHandler, false);
     document.addEventListener("keyup", keyUpHandler, false);
+    
+    //TOUCH LISTENERS
     document.addEventListener("touchstart", touchStartHandler, false);
     document.addEventListener("touchmove", touchMoveHandler, { passive: false });
     document.addEventListener("touchend", touchEndHandler, false);
+    
+    //BUTTON LISTENERS
     document.getElementById("resButton").addEventListener("click", utils.reset);
+    
+    console.log("Listeners enabled.");
+  }
+  
+  this.disable = function(){
+    document.removeEventListener("keydown", keyDownHandler, false);
+    document.removeEventListener("keyup", keyDownHandler, false);
+    
+    document.removeEventListener("touchstart", touchStartHandler, false);
+    document.removeEventListener("touchmove", touchMoveHandler, false);
+    document.removeEventListener("touchend", touchEndHandler, false);
+    //reset function is attached to the button. loop technically continues until user presses restart
+    
+    console.log("Listeners disabled.");
   }
   
   //INPUT CONTROLS
@@ -16,21 +35,21 @@ export default function InputHandler(paddle, ball){
   //KEYBOARD CONTROLS
   var keyDownHandler = function(e){
     if(e.key == "Right" || e.key == "ArrowRight")
-      paddle.rightPressed = true;
+      gameWorld.paddle.rightPressed = true;
     else if(e.key == "Left" || e.key == "ArrowLeft")
-      paddle.leftPressed = true;
-    else if(e.keyCode == 32 && ball.attached === true){
+      gameWorld.paddle.leftPressed = true;
+    else if(e.keyCode == 32 && gameWorld.ball.attached === true){
       console.log("Space pressed.");
-      ball.calculateStartAngle();
-      ball.attached = false;
+      gameWorld.ball.calculateStartAngle();
+      gameWorld.ball.attached = false;
       document.getElementById('title').innerHTML = " ";
     }
   }
   var keyUpHandler = function(e){
     if(e.key == "Right" || e.key == "ArrowRight")
-      paddle.rightPressed = false;
+      gameWorld.paddle.rightPressed = false;
     else if(e.key == "Left" || e.key == "ArrowLeft")
-      paddle.leftPressed = false;
+      gameWorld.paddle.leftPressed = false;
     else if(e.keyCode == 32)
       console.log("Space released.");
   }
@@ -38,20 +57,20 @@ export default function InputHandler(paddle, ball){
   //TOUCH CONTROLS
   var touchStartHandler = function(e){
     e.preventDefault();
-    paddle.position.x = e.touches[0].clientX - paddle.w / 2;
+    gameWorld.paddle.position.x = e.touches[0].clientX - gameWorld.paddle.w / 2;
   }
   var touchMoveHandler = function(e){
     e.preventDefault();
-    paddle.position.x = e.touches[0].clientX - paddle.w / 2;
-    if(paddle.position.x + paddle.w > document.body.clientWidth)
-        paddle.position.x = document.body.clientWidth - paddle.w;
-    else if(paddle.position.x < 0)
-        paddle.position.x = 0;
+    gameWorld.paddle.position.x = e.touches[0].clientX - gameWorld.paddle.w / 2;
+    if(gameWorld.paddle.position.x + gameWorld.paddle.w > gameWorld.getScreenDimensions().width)
+        gameWorld.paddle.position.x = gameWorld.getScreenDimensions().width - gameWorld.paddle.w;
+    else if(gameWorld.paddle.position.x < 0)
+        gameWorld.paddle.position.x = 0;
   }
   var touchEndHandler = function(e){
-    if(ball.attached === true){
-      ball.calculateStartAngle();
-      ball.attached = false;
+    if(gameWorld.ball.attached === true){
+      gameWorld.ball.calculateStartAngle();
+      gameWorld.ball.attached = false;
       document.getElementById('title').innerHTML = " ";
     }
     e.preventDefault();

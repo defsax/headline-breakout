@@ -1,14 +1,12 @@
 //ball class
-function Ball(x, y, r, speed){
+export default function Ball(gameWorld, x, y, r, speed){
+  var canvasDimensions = { w: gameWorld.getScreenDimensions().width, h: gameWorld.getScreenDimensions().height };
+  
   this.position = { x, y };
   this.radius = r;
   this.speed = speed;
   this.direction = { x : 0.1, y : -0.1 };
   this.attached = true;
-  
-  //a holder for reference to paddle and bricks, compound objects
-  this.paddleReference;
-  this.bricksReference;
   
   this.colour = 'black';
   this.randomizeColor = function(){
@@ -21,6 +19,7 @@ function Ball(x, y, r, speed){
   }
   
   this.draw = function(context){
+    context.beginPath();
     context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
     context.fillStyle = this.colour;
     context.fill();
@@ -28,20 +27,21 @@ function Ball(x, y, r, speed){
     context.stokeStyle = "black"
     context.stroke();
     context.lineWidth = 1;
+    context.closePath();
   }
-  this.update = function(dt, canvas){
+  this.update = function(dt){
     if(this.attached === true){
-      this.position.x = this.paddleReference.position.x + (this.paddleReference.w / 2);
-      this.position.y = this.paddleReference.position.y - this.radius;
+      this.position.x = gameWorld.paddle.position.x + (gameWorld.paddle.w / 2);
+      this.position.y = gameWorld.paddle.position.y - this.radius;
     }
     else{
-      this.checkBoundaries(dt, this.paddleReference, this.bricksReference, canvas);
+      this.checkBoundaries(dt, gameWorld.paddle);
     }
   }
   
-  this.checkBoundaries = function(dt, pad, brcks, canvas){
+  this.checkBoundaries = function(dt, pad){
     //check left/right boundaries
-    if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvas.width - this.radius){
+    if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvasDimensions.w - this.radius){
       this.direction.x = -this.direction.x;
       this.randomizeColor();
     }
@@ -50,16 +50,15 @@ function Ball(x, y, r, speed){
       this.direction.y = -this.direction.y;
       this.randomizeColor();
     } 
-    else if(this.position.y + this.direction.y > canvas.height - this.radius){
+    else if(this.position.y + this.direction.y > canvasDimensions.h - this.radius){
       //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
       document.getElementById("title").innerHTML = "GAME OVER";
       document.getElementById("title").style.pointerEvents = "none"; 
       this.speed = 0;
-      //document.removeEventListener("touchstart", touchStartHandler, false);
-      //document.removeEventListener("touchmove", touchMoveHandler, false);
-      //document.removeEventListener("touchend", touchEndHandler, false);
-      //reset function is attached to the button. loop technically continues until user presses restart
+      
+      gameWorld.inputHandler.disable();
+      gameWorld.gameOver = true;
     }
 
     //check ball collision with paddle
