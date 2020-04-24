@@ -17,6 +17,11 @@ export default function PowerUP(x, y, s, gameWorld){
     this.position.x += this.direction.x * dt * speed;
     this.position.y += this.direction.y * dt * speed;
     
+    if(utils.rectCollision(this, gameWorld.paddle)){
+      this.deleted = true;
+      console.log("Caught powerup.");
+    }
+    
     if(this.position.y > canvasHeight){
       this.deleted = true;
       console.log("Missed powerup.");

@@ -25,6 +25,8 @@ export default function Brick(columns, position, gameWorld, powerUp){
       this.deleted = true;
       
       if(this.special === true){
+        //if new brick is special, it's a powerup brick:
+          //create it in world so it can be updated
         gameWorld.addObject(new PowerUP(
           this.position.x + this.w / 2, 
           this.position.y + this.h / 2, 

@@ -80,11 +80,21 @@ export function randomizeColor(){
 }
 
 export function areColliding(obj1, obj2){
-    if(obj1.position.x - obj1.radius <= obj2.position.x + obj2.w   &&
-        obj1.position.x + obj1.radius >= obj2.position.x &&
-        obj1.position.y - obj1.radius <= obj2.position.y + obj2.h  &&
-        obj1.position.y + obj1.radius >= obj2.position.y)
-      return true;
-    else
-      return false;
-  }
+  if(obj1.position.x - obj1.radius <= obj2.position.x + obj2.w   &&
+      obj1.position.x + obj1.radius >= obj2.position.x &&
+      obj1.position.y - obj1.radius <= obj2.position.y + obj2.h  &&
+      obj1.position.y + obj1.radius >= obj2.position.y)
+    return true;
+  else
+    return false;
+}
+
+export function rectCollision(obj1, obj2){
+  if(obj1.position.x - obj1.w <= obj2.position.x + obj2.w   &&
+      obj1.position.x + obj1.w >= obj2.position.x &&
+      obj1.position.y - obj1.h <= obj2.position.y + obj2.h  &&
+      obj1.position.y + obj1.h >= obj2.position.y)
+    return true;
+  else
+    return false;
+}
