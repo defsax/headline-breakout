@@ -1,6 +1,7 @@
 import * as utils from './utilities.js';
+import PowerUP from './powerup.js';
 
-export default function Brick(columns, position, gameWorld){
+export default function Brick(columns, position, gameWorld, powerUp){
   var gameWidth = gameWorld.getScreenDimensions().width;
   var gameHeight = gameWorld.getScreenDimensions().height;
   
@@ -12,13 +13,29 @@ export default function Brick(columns, position, gameWorld){
   this.w = gameWidth / columns;
   this.h = 20;
   
+  this.color = '#f5f5f0';
+  
   this.deleted = false;
+  this.special = powerUp;
   
   this.update = function(dt){
     //console.log("Brick update");
     if(utils.areColliding(gameWorld.ball, this)){
       gameWorld.ball.direction.y = -gameWorld.ball.direction.y;
       this.deleted = true;
+      
+      if(this.special === true){
+        gameWorld.addObject(new PowerUP(
+          this.position.x + this.w / 2, 
+          this.position.y + this.h / 2, 
+          50, 
+          gameWorld
+        ));
+      }
+    }
+    
+    if(this.special === true){
+      this.color = utils.randomizeColor();
     }
     
     /*
@@ -71,7 +88,7 @@ export default function Brick(columns, position, gameWorld){
   this.draw = function(context){
     context.beginPath();
     context.rect(this.position.x, this.position.y, this.w, this.h);
-    context.fillStyle = "grey";
+    context.fillStyle = this.color;
     context.fill();
     context.strokeStyle = "black";
     context.stroke();

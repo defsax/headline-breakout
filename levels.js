@@ -5,7 +5,7 @@ export const level1 = [
   [ 1, 0, 0, 0, 0, 0, 1 ],
   [ 1, 0, 1, 0, 1, 0, 1 ],
   [ 1, 1, 1, 1, 1, 1, 1 ], 
-  [ 0, 1, 0, 1, 0, 1, 0 ]
+  [ 0, 1, 0, 1, 2, 1, 0 ]
 ];
 
 export function buildLevel(gameWorld, level){
@@ -37,7 +37,14 @@ export function buildLevel(gameWorld, level){
           x: canvasWidth / bricksInRow * brickNumber, 
           y: 50 + 20 * rowNumber
         }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld));
+        bricks.push(new Brick(bricksInRow, pos, gameWorld, false));
+      }
+      if(brick === 2){
+        let pos = {
+          x: canvasWidth / bricksInRow * brickNumber, 
+          y: 50 + 20 * rowNumber
+        }
+        bricks.push(new Brick(bricksInRow, pos, gameWorld, true));
       }
       //else
         //console.log("No brick.");

@@ -4,6 +4,7 @@ import * as utils from './utilities.js';
 //canvas reference
 var canvas = document.getElementById("myCanvas");
 var ctx = canvas.getContext("2d");
+ctx.scale(1, -1);
 canvas.width = document.body.clientWidth;
 canvas.height = window.innerHeight;
 
