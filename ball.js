@@ -91,56 +91,10 @@ export default function Ball(gameWorld, x, y, r, speed){
       gameWorld.headlines.updateHeadline('title');
       utils.adjustFontSize('title');
     }
-    
-    /*
-    //check ball collision with bricks
-    for(let c = 0; c < brcks.colCount; c++){
-      for(let r = 0; r < brcks.rowCount; r++){
-        let b = brcks.bArray[c][r];
-        if(utils.areColliding(this, b)){
-          let top = b.position.y;
-          let bottom = b.position.y + b.h;
-          let left = b.position.x;
-          let right = b.position.x + b.w;
-          
-          this.color = utils.randomizeColor();
-          
-          if(this.position.x + this.radius < left){
-            console.log("Left."); 
-            this.direction.x = -this.direction.x;
-            this.position.x = left - this.radius;
-            break;
-          }
-          else if(this.position.x - this.radius > right){
-            console.log("Right.");
-            this.direction.x = -this.direction.x;
-            this.position.x = right + this.radius;
-            break;
-          }
-          else if(this.position.y - this.radius < top){
-            console.log("Top.");
-            this.position.y = top - this.radius;
-            this.direction.y = -this.direction.y;
-            break;
-          }
-          else if(this.position.y + this.radius > bottom){
-            console.log("Bottom");
-            this.position.y = bottom + this.radius;
-            this.direction.y = -this.direction.y;
-            break;
-          }
-          
-          
-          console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
-        }
-      }
-    }
-    */
   }
   
   this.calculateStartAngle = function(){
     var newBounceAngle = utils.getRndFloat(-1, 1) * (5*Math.PI/12);
-    console.log("New bounce angle: " + newBounceAngle);
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);
     this.direction.x = -this.direction.x;

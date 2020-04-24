@@ -60,6 +60,7 @@ export default function World(w, h) {
   };
   this.update = function(dt){
     objects.forEach(object => object.update(dt));
+    objects = objects.filter(object => !object.deleted);
   };
   this.draw = function(ctx){
     objects.forEach(object => object.draw(ctx));
