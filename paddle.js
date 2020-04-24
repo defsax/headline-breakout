@@ -17,13 +17,10 @@ export default function Paddle(gameWorld, w, h, speed){
     context.fill();
     context.stroke();
     context.closePath();
-    
-    //console.log("Paddle draw.");
   }
   
   this.update = function(dt){
-    this.input(dt); 
-    //console.log("Paddle update.");
+    this.input(dt);
   }
   
   //PADDLE MOVEMENT/CHECKING

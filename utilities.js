@@ -1,3 +1,5 @@
+export utils;
+
 var utils = {
   add: function(a, b){
     return a + b;
@@ -29,5 +31,13 @@ var utils = {
       let fontSize = parseInt(hlFontSize);
       headline.style.fontSize = (fontSize - 10) + 'px';
     }
+  },
+  randomizeColor: function(){
+    var letters = '0123456789ABCDEF';
+    let color = '#';
+    for (var i = 0; i < 6; i++){
+      color += letters[Math.floor(Math.random() * 16)];
+    }
+    return color;
   }
-}
+};

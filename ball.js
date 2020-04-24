@@ -1,3 +1,5 @@
+import utils from './utilities.js';
+
 //ball class
 export default function Ball(gameWorld, x, y, r, speed){
   var canvasDimensions = { w: gameWorld.getScreenDimensions().width, h: gameWorld.getScreenDimensions().height };
@@ -40,16 +42,27 @@ export default function Ball(gameWorld, x, y, r, speed){
   }
   
   this.checkBoundaries = function(dt, pad){
-    //check left/right boundaries
-    if(this.position.x + this.direction.x < this.radius || this.position.x + this.direction.x > canvasDimensions.w - this.radius){
+    //check left boundary
+    if(this.position.x + this.direction.x < this.radius){
       this.direction.x = -this.direction.x;
       this.randomizeColor();
+      
+      //avoid getting stuck in wall
+      this.position.x = this.radius;
     }
-    //check top boundaries
+    //check right boundary
+    if(this.position.x + this.direction.x > canvasDimensions.w - this.radius){
+      this.direction.x = -this.direction.x;
+      this.randomizeColor();
+      
+      //avoid getting stuck in wall
+      this.position.x = canvasDimensions.w - this.radius;
+    }
+    //check top boundary
     if(this.position.y + this.direction.y < this.radius){
       this.direction.y = -this.direction.y;
       this.randomizeColor();
-    } 
+    }
     else if(this.position.y + this.direction.y > canvasDimensions.h - this.radius){
       //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
@@ -66,6 +79,8 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.calculateNewAngle(pad);
       this.randomizeColor();
       Headline.updateHeadline('title');
+      
+      utils.adjustFontSize('title');
     }
     /*
     //check ball collision with bricks

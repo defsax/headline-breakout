@@ -1,3 +1,5 @@
+import utils from './utilities.js';
+
 export default function InputHandler(gameWorld){
   
   this.initialize = function(){
@@ -13,7 +15,7 @@ export default function InputHandler(gameWorld){
     document.addEventListener("touchend", touchEndHandler, false);
     
     //BUTTON LISTENERS
-    document.getElementById("resButton").addEventListener("click", utils.reset);
+    document.getElementById("resButton").addEventListener("click", utils.reset());
     
     console.log("Listeners enabled.");
   }
