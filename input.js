@@ -1,4 +1,4 @@
-import utils from './utilities.js';
+import * as utils from './utilities.js';
 
 export default function InputHandler(gameWorld){
   
@@ -15,7 +15,7 @@ export default function InputHandler(gameWorld){
     document.addEventListener("touchend", touchEndHandler, false);
     
     //BUTTON LISTENERS
-    document.getElementById("resButton").addEventListener("click", utils.reset());
+    document.getElementById("resButton").addEventListener("click", utils.reset);
     
     console.log("Listeners enabled.");
   }
@@ -41,7 +41,6 @@ export default function InputHandler(gameWorld){
     else if(e.key == "Left" || e.key == "ArrowLeft")
       gameWorld.paddle.leftPressed = true;
     else if(e.keyCode == 32 && gameWorld.ball.attached === true){
-      console.log("Space pressed.");
       gameWorld.ball.calculateStartAngle();
       gameWorld.ball.attached = false;
       document.getElementById('title').innerHTML = " ";
@@ -52,8 +51,6 @@ export default function InputHandler(gameWorld){
       gameWorld.paddle.rightPressed = false;
     else if(e.key == "Left" || e.key == "ArrowLeft")
       gameWorld.paddle.leftPressed = false;
-    else if(e.keyCode == 32)
-      console.log("Space released.");
   }
   
   //TOUCH CONTROLS

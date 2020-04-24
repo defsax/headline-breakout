@@ -1,8 +1,12 @@
-import utils from './utilities.js';
+//import utils from './utilities.js';
+import * as utils from './utilities.js';
 
 //ball class
 export default function Ball(gameWorld, x, y, r, speed){
-  var canvasDimensions = { w: gameWorld.getScreenDimensions().width, h: gameWorld.getScreenDimensions().height };
+  var canvasDimensions = { 
+    w: gameWorld.getScreenDimensions().width, 
+    h: gameWorld.getScreenDimensions().height 
+  };
   
   this.position = { x, y };
   this.radius = r;
@@ -10,20 +14,12 @@ export default function Ball(gameWorld, x, y, r, speed){
   this.direction = { x : 0.1, y : -0.1 };
   this.attached = true;
   
-  this.colour = 'black';
-  this.randomizeColor = function(){
-    var letters = '0123456789ABCDEF';
-    let color = '#';
-    for (var i = 0; i < 6; i++){
-      color += letters[Math.floor(Math.random() * 16)];
-    }
-    this.colour = color;
-  }
+  this.color = 'black';
   
   this.draw = function(context){
     context.beginPath();
     context.arc(this.position.x, this.position.y, this.radius, 0, Math.PI*2, false);
-    context.fillStyle = this.colour;
+    context.fillStyle = this.color;
     context.fill();
     context.lineWidth = 3;
     context.stokeStyle = "black"
@@ -37,15 +33,18 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.position.y = gameWorld.paddle.position.y - this.radius;
     }
     else{
-      this.checkBoundaries(dt, gameWorld.paddle);
+      this.checkBoundaries(dt);
     }
   }
   
-  this.checkBoundaries = function(dt, pad){
+  this.checkBoundaries = function(dt){
+    var pad = gameWorld.paddle;
+    //var brcks = gameWorld.bricks;
+    
     //check left boundary
     if(this.position.x + this.direction.x < this.radius){
       this.direction.x = -this.direction.x;
-      this.randomizeColor();
+      this.color = utils.randomizeColor();
       
       //avoid getting stuck in wall
       this.position.x = this.radius;
@@ -53,7 +52,7 @@ export default function Ball(gameWorld, x, y, r, speed){
     //check right boundary
     if(this.position.x + this.direction.x > canvasDimensions.w - this.radius){
       this.direction.x = -this.direction.x;
-      this.randomizeColor();
+      this.color = utils.randomizeColor();
       
       //avoid getting stuck in wall
       this.position.x = canvasDimensions.w - this.radius;
@@ -61,7 +60,9 @@ export default function Ball(gameWorld, x, y, r, speed){
     //check top boundary
     if(this.position.y + this.direction.y < this.radius){
       this.direction.y = -this.direction.y;
-      this.randomizeColor();
+      this.color = utils.randomizeColor();
+      
+      this.position.y = this.radius;
     }
     else if(this.position.y + this.direction.y > canvasDimensions.h - this.radius){
       //show button, set text to game over and disable link
@@ -75,25 +76,26 @@ export default function Ball(gameWorld, x, y, r, speed){
     }
 
     //check ball collision with paddle
-    if(this.AABBcollision(pad)){
+    if(utils.areColliding(this, pad)){
       this.calculateNewAngle(pad);
-      this.randomizeColor();
-      Headline.updateHeadline('title');
+      this.color = utils.randomizeColor();
+      gameWorld.headlines.updateHeadline('title');
       
       utils.adjustFontSize('title');
     }
+    
     /*
     //check ball collision with bricks
     for(let c = 0; c < brcks.colCount; c++){
       for(let r = 0; r < brcks.rowCount; r++){
         let b = brcks.bArray[c][r];
-        if(this.AABBcollision(b)){
+        if(utils.areColliding(this, b)){
           let top = b.position.y;
           let bottom = b.position.y + b.h;
           let left = b.position.x;
           let right = b.position.x + b.w;
           
-          this.randomizeColor();
+          this.color = utils.randomizeColor();
           
           if(this.position.x + this.radius < left){
             console.log("Left."); 
@@ -124,7 +126,8 @@ export default function Ball(gameWorld, x, y, r, speed){
           console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
         }
       }
-    }*/
+    }
+    */
     
     //update position
     this.position.x += this.direction.x * dt * this.speed;
@@ -139,22 +142,13 @@ export default function Ball(gameWorld, x, y, r, speed){
       return false;
   }
   
-  this.AABBcollision = function(obj){
-    if(this.position.x - this.radius < obj.position.x + obj.w   &&
-        this.position.x + this.radius > obj.position.x &&
-        this.position.y - this.radius < obj.position.y + obj.h  &&
-        this.position.y + this.radius > obj.position.y)
-      return true;
-    else
-      return false;
-  }
-  
   this.calculateStartAngle = function(){
     var newBounceAngle = utils.getRndFloat(-1, 1) * (5*Math.PI/12);
-  
+    console.log("New bounce angle: " + newBounceAngle);
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);
     this.direction.x = -this.direction.x;
+    console.log("X dir angle: " + this.direction.x);
   }
   
   this.calculateNewAngle = function(pad){

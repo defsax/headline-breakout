@@ -1,5 +1,5 @@
 import World from './world.js';
-//import utils from './utilities.js';
+import * as utils from './utilities.js';
 
 //canvas reference
 var canvas = document.getElementById("myCanvas");
@@ -8,11 +8,10 @@ canvas.width = document.body.clientWidth;
 canvas.height = window.innerHeight;
 
 //fit initial message to screen size
-//utils.adjustFontSize('title');
+utils.adjustFontSize('title');
 
 var world = new World(canvas.width, canvas.height);
 world.start();
-
 
 //timing vars
 var now;
@@ -30,7 +29,7 @@ function gameLoop(){
     world.draw(ctx);
     
     //visualize deltatime
-    //world.drawText(dt.toString(), 10, 25, "black", "fill", ctx);
+    world.drawText(dt.toString(), 10, 25, "black", "fill", ctx);
     
     last = now;
     
