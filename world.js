@@ -1,7 +1,6 @@
 import Ball from './ball.js';
 import Paddle from './paddle.js';
 import { buildLevel, level1 } from './levels.js';
-import Bricks from './bricks.js';
 import InputHandler from './input.js';
 import HeadlineHandler from './headline.js';
 import * as utils from './utilities.js';
@@ -47,18 +46,12 @@ export default function World(w, h) {
     //instantiate objects
     this.ball = new Ball(this, 20, 20, 10, 150);
     this.ball.color = utils.randomizeColor();
-    
     this.paddle = new Paddle(this, 75, 10, 300);
-    
-    //this.bricks = new Bricks(this);
-    //this.bricks.init();
-    
     let bricks = new buildLevel(this, level1);
     
     //add objects to array
     objects.push(this.ball);
     objects.push(this.paddle);
-    //objects.push(this.bricks);
     objects.push(...bricks); //spread operator
     
     //initialize input handler

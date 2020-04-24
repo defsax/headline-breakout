@@ -51,6 +51,9 @@ export default function InputHandler(gameWorld){
       gameWorld.paddle.rightPressed = false;
     else if(e.key == "Left" || e.key == "ArrowLeft")
       gameWorld.paddle.leftPressed = false;
+    else if(e.key == 32){
+      //space released
+    }
   }
   
   //TOUCH CONTROLS

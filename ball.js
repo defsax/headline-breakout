@@ -33,11 +33,18 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.position.y = gameWorld.paddle.position.y - this.radius;
     }
     else{
+      //update position
+      this.position.x += this.direction.x * dt * this.speed;
+      this.position.y += this.direction.y * dt * this.speed;
+    
+      //update boundaries
       this.checkBoundaries(dt);
     }
   }
   
   this.checkBoundaries = function(dt){
+    
+    
     var pad = gameWorld.paddle;
     //var brcks = gameWorld.bricks;
     
@@ -61,8 +68,6 @@ export default function Ball(gameWorld, x, y, r, speed){
     if(this.position.y + this.direction.y < this.radius){
       this.direction.y = -this.direction.y;
       this.color = utils.randomizeColor();
-      
-      this.position.y = this.radius;
     }
     else if(this.position.y + this.direction.y > canvasDimensions.h - this.radius){
       //show button, set text to game over and disable link
@@ -77,10 +82,13 @@ export default function Ball(gameWorld, x, y, r, speed){
 
     //check ball collision with paddle
     if(utils.areColliding(this, pad)){
+      
+      //calculateNewAngle relative to middle of paddle + get random ball color
       this.calculateNewAngle(pad);
       this.color = utils.randomizeColor();
-      gameWorld.headlines.updateHeadline('title');
       
+      //load new headline and resize it
+      gameWorld.headlines.updateHeadline('title');
       utils.adjustFontSize('title');
     }
     
@@ -128,18 +136,6 @@ export default function Ball(gameWorld, x, y, r, speed){
       }
     }
     */
-    
-    //update position
-    this.position.x += this.direction.x * dt * this.speed;
-    this.position.y += this.direction.y * dt * this.speed;
-  }
-  
-  this.checkLeftRight = function(obj){
-    if(this.position.x + this.direction.x + this.radius > obj.position.x || 
-      this.position.x + this.direction.x - this.radius < obj.position.x + obj.w)
-      return true;
-    else
-      return false;
   }
   
   this.calculateStartAngle = function(){
@@ -148,7 +144,6 @@ export default function Ball(gameWorld, x, y, r, speed){
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);
     this.direction.x = -this.direction.x;
-    console.log("X dir angle: " + this.direction.x);
   }
   
   this.calculateNewAngle = function(pad){
