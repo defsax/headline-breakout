@@ -2,7 +2,7 @@
 export default function Paddle(gameWorld, w, h, speed){
   var canvasDimensions = gameWorld.getScreenDimensions();
   
-  this.position = { x: (canvasDimensions.width - 75) / 2, y: canvasDimensions.height - (10 * 3) };
+  this.position = { x: (canvasDimensions.width - 75) / 2, y: canvasDimensions.height - (10 * 5) };
   this.w = w;
   this.h = h;
   this.speed = speed;

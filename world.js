@@ -1,6 +1,6 @@
 import Ball from './ball.js';
 import Paddle from './paddle.js';
-import { buildLevel, level1 } from './levels.js';
+import { buildLevel, level1, level2 } from './levels.js';
 import InputHandler from './input.js';
 import HeadlineHandler from './headline.js';
 import * as utils from './utilities.js';
@@ -8,8 +8,15 @@ import * as utils from './utilities.js';
 export default function World(w, h) {
   //private variables
   var objects = [];
+  this.numberOfBalls = 0;
+  this.balls = [];
+  this.message = " ";
+  this.score = 0;
   //canvas reference
   var screenDimensions = { width: w, height: h };
+  
+  this.paddleWidth = 75;
+  this.ballSpeed = 200;
   
   this.gameOver = false;
   
@@ -44,13 +51,17 @@ export default function World(w, h) {
     this.headlines.initialize();
     
     //instantiate objects
-    this.ball = new Ball(this, 20, 20, 10, 150);
+    this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
     this.ball.color = utils.randomizeColor();
-    this.paddle = new Paddle(this, 75, 10, 300);
-    let bricks = new buildLevel(this, level1);
+    this.balls.push(this.ball);
+    this.numberOfBalls += 1;
+    
+    this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
+    let bricks = new buildLevel(this, level2);
     
     //add objects to array
-    objects.push(this.ball);
+    //objects = objects.concat(this.balls);
+    objects.push(...this.balls);
     objects.push(this.paddle);
     objects.push(...bricks); //spread operator
     
@@ -61,9 +72,16 @@ export default function World(w, h) {
   this.update = function(dt){
     objects.forEach(object => object.update(dt));
     objects = objects.filter(object => !object.deleted);
+    this.balls = this.balls.filter(b => !b.deleted);
   };
   this.draw = function(ctx){
     objects.forEach(object => object.draw(ctx));
+    
+    //display current power up
+    utils.drawText(this.message, screenDimensions.width - 350, 25, "black", "fill", ctx);
+    
+    //display score
+    utils.drawText("Score: " + this.score, screenDimensions.width - 150, 25, "black", "fill", ctx);
   };
   
   this.addObject = function(obj){

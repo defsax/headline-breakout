@@ -20,19 +20,22 @@ export default function Brick(columns, position, gameWorld, powerUp){
   
   this.update = function(dt){
     //console.log("Brick update");
-    if(utils.areColliding(gameWorld.ball, this)){
-      gameWorld.ball.direction.y = -gameWorld.ball.direction.y;
-      this.deleted = true;
-      
-      if(this.special === true){
-        //if new brick is special, it's a powerup brick:
-          //create it in world so it can be updated
-        gameWorld.addObject(new PowerUP(
-          this.position.x + this.w / 2, 
-          this.position.y + this.h / 2, 
-          50, 
-          gameWorld
-        ));
+    for(let i = 0; i < gameWorld.balls.length; i++){
+      if(utils.areColliding(gameWorld.balls[i], this)){
+        gameWorld.score += 10;
+        gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
+        this.deleted = true;
+        
+        if(this.special === true){
+          //if new brick is special, it's a powerup brick:
+            //create it in world so it can be updated
+          gameWorld.addObject(new PowerUP(
+            this.position.x + this.w / 2, 
+            this.position.y + this.h / 2, 
+            50, 
+            gameWorld
+          ));
+        }        
       }
     }
     

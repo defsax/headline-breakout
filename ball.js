@@ -13,6 +13,7 @@ export default function Ball(gameWorld, x, y, r, speed){
   this.speed = speed;
   this.direction = { x : 0.1, y : -0.1 };
   this.attached = true;
+  this.deleted = false;
   
   this.color = 'black';
   
@@ -44,7 +45,6 @@ export default function Ball(gameWorld, x, y, r, speed){
   
   this.checkBoundaries = function(dt){
     
-    
     var pad = gameWorld.paddle;
     //var brcks = gameWorld.bricks;
     
@@ -69,7 +69,7 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.direction.y = -this.direction.y;
       this.color = utils.randomizeColor();
     }
-    else if(this.position.y + this.direction.y > canvasDimensions.h - this.radius){
+    if(this.position.y + this.direction.y > canvasDimensions.h - this.radius && gameWorld.balls.length === 1){
       //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
       document.getElementById("title").innerHTML = "GAME OVER";
@@ -79,10 +79,14 @@ export default function Ball(gameWorld, x, y, r, speed){
       gameWorld.inputHandler.disable();
       gameWorld.gameOver = true;
     }
+    else if(this.position.y + this.direction.y > canvasDimensions.h + this.radius && gameWorld.balls.length > 1){
+      gameWorld.numberOfBalls--;
+      this.deleted = true;
+    }
 
     //check ball collision with paddle
     if(utils.areColliding(this, pad)){
-      
+      console.log(gameWorld.balls.length);
       //calculateNewAngle relative to middle of paddle + get random ball color
       this.calculateNewAngle(pad);
       this.color = utils.randomizeColor();

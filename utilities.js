@@ -98,3 +98,20 @@ export function rectCollision(obj1, obj2){
   else
     return false;
 }
+
+export function drawText(text, w, h, color, type, context){
+    context.font = "30px Arial";
+    switch(type){
+      case "stroke":
+        context.strokeStyle = color;
+        context.strokeText(text, w, h);
+        break;
+      case "fill":
+        context.fillStyle = color;
+        context.fillText(text, w, h);
+        break;
+      default:
+        console.log("Unknown type.");
+        break;
+    }
+  }
