@@ -6,36 +6,22 @@ import HeadlineHandler from './headline.js';
 import * as utils from './utilities.js';
 
 export default function World(w, h) {
-  //private variables
+  //private properties
   var objects = [];
+  var screenDimensions = { width: w, height: h }; //canvas reference
+  var powerUpQueue = [];
+  
+  //public properties
   this.numberOfBalls = 0;
   this.balls = [];
   this.message = " ";
   this.score = 0;
-  //canvas reference
-  var screenDimensions = { width: w, height: h };
-  
   this.paddleWidth = 75;
   this.ballSpeed = 200;
-  
   this.gameOver = false;
-  
-  this.drawText = function(text, w, h, color, type, ctx){
-    ctx.font = "30px Arial";
-    switch(type){
-      case "stroke":
-        ctx.strokeStyle = color;
-        ctx.strokeText(text, w, h);
-        break;
-      case "fill":
-        ctx.fillStyle = color;
-        ctx.fillText(text, w, h);
-        break;
-      default:
-        console.log("Unknown type.");
-        break;
-    }
-  }
+  this.powerUpActive = false;
+  this.elapsed = 0;
+  this.duration = 10;
   
   //public methods
   this.start = function(){
@@ -73,6 +59,40 @@ export default function World(w, h) {
     objects.forEach(object => object.update(dt));
     objects = objects.filter(object => !object.deleted);
     this.balls = this.balls.filter(b => !b.deleted);
+    
+    if(this.powerUpActive){
+      this.elapsed += dt;
+      console.log("Elapsed: " + this.elapsed);
+    }
+
+    //if powerup time is up
+    if(this.elapsed >= this.duration){
+      //reset timer
+      this.elapsed = 0;
+      
+      //reset current/last powerup value
+      powerUpQueue[0]().stop.call();
+      
+      //remove the powerup
+      powerUpQueue.shift();
+      
+      //if there are more powerups in the queue
+      if(powerUpQueue.length){
+        //start the next one
+        powerUpQueue[0]();
+      }
+      else
+        this.powerUpActive = false;
+    }
+    /*
+    if(powerUpQueue.length){
+      for(let i = 0; i < powerUpQueue.length; i++){
+        console.log(powerUpQueue[i]);
+        powerUpQueue[i](); 
+        
+      }
+    }
+    */
   };
   this.draw = function(ctx){
     objects.forEach(object => object.draw(ctx));
@@ -86,6 +106,17 @@ export default function World(w, h) {
   
   this.addObject = function(obj){
     objects.push(obj);
+  };
+  this.addPowerUp = function(obj){
+    //if there is alredy a powerup in the queue, add it
+    if(powerUpQueue.length)
+      powerUpQueue.push(obj);
+    else{
+      //otherwise activate it
+      powerUpQueue.push(obj);
+      powerUpQueue[0]();
+    }
+    this.powerUpActive = true;
   };
   this.listObjects = function(){
     if(objects){

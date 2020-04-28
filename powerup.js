@@ -7,6 +7,7 @@ export default function PowerUP(x, y, s, gameWorld){
   var canvasHeight = gameWorld.getScreenDimensions().height;
   var duration = 0;
   var expiration = 1000;
+  var drawPhase = true;
   
   var activate = function(dt){
     duration += dt;
@@ -14,6 +15,18 @@ export default function PowerUP(x, y, s, gameWorld){
     
     if(duration >= 1)
       this.deleted = true;
+  }
+  
+  this.shortPad = function(){
+    var x = 0;
+    
+    console.log("Short paddle.");
+    gameWorld.paddle.w = 40;
+    
+    this.stop = function(){
+      console.log("Stopping short paddle.");
+      gameWorld.paddle.w = gameWorld.paddleWidth;
+    }
   }
   
   this.w = 10;
@@ -28,14 +41,11 @@ export default function PowerUP(x, y, s, gameWorld){
     color = utils.randomizeColor();
     this.position.y += this.direction.y * dt * speed;
     
+    //if you catch the powerup, start a timer for a random power up.
     if(utils.rectCollision(this, gameWorld.paddle)){
       this.deleted = true;
       console.log("Caught powerup.");
-      //gameWorld.powerUpActive = true;
-      //gameWorld.multiball();
-      //gameWorld.powerups[0].activate();
-      gameWorld.addObject(new Modifier(gameWorld, Math.floor(Math.random() * 5)));
-      
+      gameWorld.addPowerUp(this.shortPad);
     }
     
     if(this.position.y > canvasHeight){
@@ -54,17 +64,23 @@ export default function PowerUP(x, y, s, gameWorld){
   }
 }
 
-function Modifier(gameWorld, x){
+function Modi(gameWorld, x){
   console.log("Modifier.");
   var powerUpDuration = 0;
   var maxDuration = 10;
   this.deleted = false;
+  
+  var short = function(){
+    console.log("Short paddle.");
+    gameWorld.paddle.w = 40;
+  }
   
   switch(x){
     case 0:{
       gameWorld.message = "Short paddle.";
       console.log("Short paddle.");
       gameWorld.paddle.w = 40;
+      //Modifier.setCurrentPower(short);
       break;
     }
     case 1:{

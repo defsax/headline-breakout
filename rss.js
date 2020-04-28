@@ -7,6 +7,7 @@
     const DOMPARSER = new DOMParser();
     var encodedURL; 
     
+    //check if the link is nytimes or not. if it is, it doesn't need to be encoded
     if(siteURL.indexOf('nytimes') === -1){
       encodedURL = api + encodeURIComponent(siteURL);
     }
@@ -19,6 +20,7 @@
       //fetch doesn't reject on http errors, so check that it's okay
       if(response.ok){
         try{
+          //json if not the nytimes
           if(siteURL.indexOf('nytimes') === -1){
             response.json().then((data) => {
               //parse json
@@ -31,6 +33,7 @@
             })
           }
           else{
+          //dom object if it pulls the nytimes
             response.text().then((data) => {
               //parse text
               const DOMPARSER = new DOMParser();
