@@ -10,6 +10,7 @@ export default function World(w, h) {
   var objects = [];
   var screenDimensions = { width: w, height: h }; //canvas reference
   var powerUpQueue = [];
+  var currentPower;
   
   //public properties
   this.numberOfBalls = 0;
@@ -62,38 +63,19 @@ export default function World(w, h) {
     
     if(this.powerUpActive){
       this.elapsed += dt;
-      console.log("Elapsed: " + this.elapsed);
     }
 
     //if powerup time is up
     if(this.elapsed >= this.duration){
+      console.log("Powerup time up.");
       //reset timer
       this.elapsed = 0;
-      
-      //reset current/last powerup value
-      powerUpQueue[0]().stop.call();
-      
-      //remove the powerup
-      powerUpQueue.shift();
-      
-      //if there are more powerups in the queue
-      if(powerUpQueue.length){
-        //start the next one
-        powerUpQueue[0]();
-      }
-      else
-        this.powerUpActive = false;
+      this.powerUpActive = false;
+      currentPower.stop();
+      currentPower = undefined;
     }
-    /*
-    if(powerUpQueue.length){
-      for(let i = 0; i < powerUpQueue.length; i++){
-        console.log(powerUpQueue[i]);
-        powerUpQueue[i](); 
-        
-      }
-    }
-    */
   };
+  
   this.draw = function(ctx){
     objects.forEach(object => object.draw(ctx));
     
@@ -107,16 +89,14 @@ export default function World(w, h) {
   this.addObject = function(obj){
     objects.push(obj);
   };
-  this.addPowerUp = function(obj){
-    //if there is alredy a powerup in the queue, add it
-    if(powerUpQueue.length)
-      powerUpQueue.push(obj);
-    else{
-      //otherwise activate it
-      powerUpQueue.push(obj);
-      powerUpQueue[0]();
+  this.setPowerUp = function(obj){
+    if(currentPower === undefined && obj !== undefined){
+      currentPower = obj;
+      currentPower.start();
+      this.powerUpActive = true;
     }
-    this.powerUpActive = true;
+    else
+      console.log("Powerup already active.");
   };
   this.listObjects = function(){
     if(objects){

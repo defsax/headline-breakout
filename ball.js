@@ -86,7 +86,6 @@ export default function Ball(gameWorld, x, y, r, speed){
 
     //check ball collision with paddle
     if(utils.areColliding(this, pad)){
-      console.log(gameWorld.balls.length);
       //calculateNewAngle relative to middle of paddle + get random ball color
       this.calculateNewAngle(pad);
       this.color = utils.randomizeColor();
