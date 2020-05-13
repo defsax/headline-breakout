@@ -13,9 +13,7 @@ export default function Paddle(gameWorld, w, h, speed){
     context.beginPath();
     context.rect(this.position.x, this.position.y, this.w, this.h);
     context.fillStyle = "black";
-    context.strokeStyle = "black";
     context.fill();
-    context.stroke();
     context.closePath();
   }
   

@@ -12,6 +12,13 @@ export default function World(w, h) {
   var powerUpQueue = [];
   var currentPower;
   
+  const GAMESTATE = {
+    PAUSED: 0,
+    RUNNING: 1, 
+    MENU: 2,
+    GAMEOVER: 3
+  };
+  
   //public properties
   this.numberOfBalls = 0;
   this.balls = [];
@@ -26,11 +33,15 @@ export default function World(w, h) {
   
   //public methods
   this.start = function(){
+    
+    //starting gamestate
+    this.GAMESTATE = GAMESTATE.RUNNING;
+    
     //load headlines
     this.headlines = new HeadlineHandler();
     //rss feeds
     //nytimes, huffpo, bbc, cbc, hackernews
-    this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
+    //this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
     this.headlines.addFeed('http://feeds.bbci.co.uk/news/rss.xml');
     this.headlines.addFeed('https://www.huffpost.com/section/front-page/feed?x=1');
     this.headlines.addFeed('https://www.cbc.ca/cmlink/rss-topstories');
@@ -57,6 +68,10 @@ export default function World(w, h) {
     this.inputHandler.initialize();
   };
   this.update = function(dt){
+    //skip rest of function if gamestate is paused.
+    if(this.GAMESTATE === GAMESTATE.PAUSED) return;
+    
+    //update objects
     objects.forEach(object => object.update(dt));
     objects = objects.filter(object => !object.deleted);
     this.balls = this.balls.filter(b => !b.deleted);
@@ -80,10 +95,14 @@ export default function World(w, h) {
     objects.forEach(object => object.draw(ctx));
     
     //display current power up
-    utils.drawText(this.message, screenDimensions.width - 350, 25, "black", "fill", ctx);
+    utils.drawText(this.message, screenDimensions.width - 350, 25, "black", "fill", "30px Arial", "left", ctx);
     
     //display score
-    utils.drawText("Score: " + this.score, screenDimensions.width - 150, 25, "black", "fill", ctx);
+    utils.drawText("Score: " + this.score, screenDimensions.width - 150, 25, "black", "fill", "30px Arial", "left", ctx);
+    
+    if(this.GAMESTATE === GAMESTATE.PAUSED){
+      this.pauseOverlay(ctx);
+    }
   };
   
   this.addObject = function(obj){
@@ -108,4 +127,32 @@ export default function World(w, h) {
   this.getScreenDimensions = function(){ 
     return screenDimensions; 
   };
+  this.paused = function(){
+    if(this.GAMESTATE === GAMESTATE.RUNNING){
+      this.GAMESTATE = GAMESTATE.PAUSED;
+      console.log("GAME PAUSE");
+      document.getElementById("title").style.display = "none";
+    }
+    else{
+      this.GAMESTATE = GAMESTATE.RUNNING;
+      document.getElementById("title").style.display = "block";
+    }
+  };
+  this.pauseOverlay = function(ctx){
+    ctx.beginPath();
+    ctx.rect(0, 0, screenDimensions.width, screenDimensions.height);
+    ctx.fillStyle = "rgba(0, 0, 0, 0.5)";
+    ctx.fill();
+    ctx.closePath();
+    
+    utils.drawText("PAUSED", 
+                   screenDimensions.width / 2, 
+                   screenDimensions.height / 2, 
+                   "white", 
+                   "fill", 
+                   "100px Arial",
+                   "center",
+                   ctx);
+  };
+
 }

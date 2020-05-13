@@ -45,6 +45,11 @@ export default function InputHandler(gameWorld){
       gameWorld.ball.attached = false;
       document.getElementById('title').innerHTML = " ";
     }
+    else if(e.keyCode == 27){
+      //esc
+      console.log("Escape key pressed.");
+      gameWorld.paused();
+    }
   }
   var keyUpHandler = function(e){
     if(e.key == "Right" || e.key == "ArrowRight")

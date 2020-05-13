@@ -6,8 +6,6 @@ export default function PowerUP(x, y, s, gameWorld){
   var color;
   var canvasHeight = gameWorld.getScreenDimensions().height;
   var duration = 0;
-  var expiration = 1000;
-  var drawPhase = true;
   
   var activate = function(dt){
     duration += dt;
@@ -86,9 +84,11 @@ export default function PowerUP(x, y, s, gameWorld){
       gameWorld.balls.push(newBall); //register with ball array
       gameWorld.addObject(newBall); //add to object array
       gameWorld.numberOfBalls += 1;
+      gameWorld.duration = 0.1 //reset powerup timer right away
     },
     stop: function(){
       gameWorld.message = " ";
+      gameWorld.duration = 10;
       return;
     }
   };
@@ -144,7 +144,7 @@ export default function PowerUP(x, y, s, gameWorld){
     context.closePath();
   }
 }
-
+/*
 function Modi(gameWorld, x){
   console.log("Modifier.");
   var powerUpDuration = 0;
@@ -219,3 +219,4 @@ function Modi(gameWorld, x){
     
   };
 }
+*/

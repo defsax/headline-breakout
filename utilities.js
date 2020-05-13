@@ -99,8 +99,9 @@ export function rectCollision(obj1, obj2){
     return false;
 }
 
-export function drawText(text, w, h, color, type, context){
-    context.font = "30px Arial";
+export function drawText(text, w, h, color, type, font, align, context){
+    context.font = font;
+    context.textAlign = align;
     switch(type){
       case "stroke":
         context.strokeStyle = color;
