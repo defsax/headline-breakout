@@ -20,6 +20,7 @@ export default function PowerUP(x, y, s, gameWorld){
       console.log("Short paddle.");
       gameWorld.message = "Short Paddle";
       gameWorld.paddle.w = 40;
+      gameWorld.duration = 7.5; //7.5 seconds
     },
     stop: function(){
       gameWorld.message = " ";
@@ -33,6 +34,7 @@ export default function PowerUP(x, y, s, gameWorld){
       console.log("Long paddle.");
       gameWorld.message = "Long Paddle";
       gameWorld.paddle.w = 150;
+      gameWorld.duration = 10; //10 seconds
     },
     stop: function(){
       gameWorld.message = " ";
@@ -47,6 +49,8 @@ export default function PowerUP(x, y, s, gameWorld){
       gameWorld.message = "Slo-mo";
       for(let i = 0; i < gameWorld.balls.length; i++)
         gameWorld.balls[i].speed = 100;
+      
+      gameWorld.duration = 10; //10 seconds
     },
     stop: function(){
       gameWorld.message = " ";
@@ -62,6 +66,8 @@ export default function PowerUP(x, y, s, gameWorld){
       console.log("Fastball.");
       for(let i = 0; i < gameWorld.balls.length; i++)
         gameWorld.balls[i].speed = 400;
+      
+      gameWorld.duration = 5; //5 seconds
     },
     stop: function(){
       gameWorld.message = " ";

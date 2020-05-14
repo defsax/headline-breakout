@@ -78,8 +78,9 @@ export default function World(w, h) {
     
     if(this.powerUpActive){
       this.elapsed += dt;
+      console.log(this.elapsed);
     }
-
+    
     //if powerup time is up
     if(this.elapsed >= this.duration){
       console.log("Powerup time up.");
