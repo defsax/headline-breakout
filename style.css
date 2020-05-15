@@ -5,7 +5,12 @@
 canvas {
   background: #eee;
   display: block;
+  z-index: -1;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
+/*
 h1{
   z-index: 1;
   position: absolute;
@@ -16,7 +21,7 @@ h1{
   width: 100%;
   text-align: left;
   font-size: 5em;
-}
+}*/
 body{
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
@@ -46,7 +51,7 @@ body{
   color: white;
 }
 
-a{
+.container a{
   z-index: 1;
   position: absolute;
   display: block;
