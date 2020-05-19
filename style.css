@@ -58,7 +58,7 @@ body{
   margin: auto auto;
   padding: 0.5em;
   box-sizing: border-box;
-
+  top: 0;
   text-align: left;
   font-size: 250px;
   text-decoration: none;

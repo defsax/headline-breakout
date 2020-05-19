@@ -11,9 +11,9 @@ export default function InputHandler(gameWorld){
     
     //TOUCH LISTENERS
     document.addEventListener("touchstart", touchStartHandler, false);
-    //document.getElementById("ham-nav").addEventListener("touchstart", touchMenu, false);
     document.addEventListener("touchmove", touchMoveHandler, { passive: false });
     document.addEventListener("touchend", touchEndHandler, false);
+    document.getElementById("hamburger").addEventListener("click", function(){ gameWorld.paused();});
     
     //BUTTON LISTENERS
     document.getElementById("resButton").addEventListener("click", utils.reset);
@@ -28,7 +28,6 @@ export default function InputHandler(gameWorld){
     document.removeEventListener("touchstart", touchStartHandler, false);
     document.removeEventListener("touchmove", touchMoveHandler, false);
     document.removeEventListener("touchend", touchEndHandler, false);
-    //reset function is attached to the button. loop technically continues until user presses restart
     
     console.log("Listeners disabled.");
   }
