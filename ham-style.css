@@ -1,13 +1,12 @@
 /*icon properties*/
 #ham-nav label{
-  display: block;
+  display: inline-block;
   color: white;
   background: black;
   font-style: normal;
   font-size: 1.5em;
   padding: 10px;
   z-index: 4;
-  position: absolute;
 }
 /*hide checkbox*/
 #hamburger{
