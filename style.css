@@ -10,18 +10,6 @@ canvas {
   top: 0;
   left: 0;
 }
-/*
-h1{
-  z-index: 1;
-  position: absolute;
-  display: block;
-  margin: 20vh auto;
-  padding: 0.5em;
-  box-sizing: border-box;
-  width: 100%;
-  text-align: left;
-  font-size: 5em;
-}*/
 body{
   overflow: hidden;
   font-family: Arial, Helvetica, sans-serif;
