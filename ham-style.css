@@ -12,7 +12,6 @@
 #hamburger{
   display: none;
 }
-
 /*break down menu items into vertical*/
 #items a{
   box-sizing: border-box;
@@ -27,12 +26,20 @@
   font-size: 1.5em;
   z-index: 4;
 }
-
+/*items hidden by default*/
 #items{
   display: none;
 }
+/*show items when checkbox checked*/
 #ham-nav input:checked ~ #items{
   display: block;
+}
+
+#hlines a{
+  display: block;
+}
+#hlines{
+  display: none;
 }
 
 @media screen and (max-width: 1080px){

@@ -30,6 +30,14 @@
                 var title = data.items[i].title;
                 var link = data.items[i].link;
                 postArray.push({"title": data.items[i].title, "link": data.items[i].link});
+                
+                //output to html
+                var container = document.getElementById("hlines");
+                var newTitle = document.createElement('a');
+                newTitle.innerHTML = title + "<br>";
+                newTitle.href = link;
+                newTitle.target = "_blank";
+                container.appendChild(newTitle);
               }
             })
           }
@@ -51,8 +59,17 @@
                   title === '' ||
                   title === "null")
                   return;
-                else
+                else{
                   postArray.push({"title": title, "link": link});
+                  
+                  //output to html
+                  var container = document.getElementById("hlines");
+                  var newTitle = document.createElement('a');
+                  newTitle.innerHTML = title + "<br>";
+                  newTitle.href = link;
+                  newTitle.target = "_blank";
+                  container.appendChild(newTitle);
+                }
               })
             })
           }
