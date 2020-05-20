@@ -39,14 +39,19 @@ export default function World(w, h) {
     
     //load headlines
     this.headlines = new HeadlineHandler();
-    //rss feeds
-    //nytimes, huffpo, bbc, cbc, hackernews
+    
+    /*
+     * rss feeds
+     * nytimes, huffpo, bbc, cbc, hackernews
+    */
+    
     //this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
     this.headlines.addFeed('http://feeds.bbci.co.uk/news/rss.xml');
     this.headlines.addFeed('https://www.huffpost.com/section/front-page/feed?x=1');
     this.headlines.addFeed('https://www.cbc.ca/cmlink/rss-topstories');
     this.headlines.addFeed('https://hnrss.org/frontpage');
     this.headlines.initialize();
+    this.headlines.createList();
     
     //instantiate objects
     this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);

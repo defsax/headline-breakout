@@ -3,7 +3,8 @@
   
   var postArray = [];  
   
-  function getNews(siteURL){
+  //async function getNews(siteURL){
+  const getNews = async (siteURL) => {
     const DOMPARSER = new DOMParser();
     var encodedURL; 
     
@@ -15,9 +16,9 @@
       encodedURL = siteURL;
     }
     
-    fetch(encodedURL)
+    await fetch(encodedURL)
     .then((response) => {
-      //fetch doesn't reject on http errors, so check that it's okay
+      //fetch doesn't reject on http errors, so check that it's okay first
       if(response.ok){
         try{
           //json if not the nytimes
