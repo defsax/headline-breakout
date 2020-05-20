@@ -138,12 +138,14 @@ export default function World(w, h) {
       this.GAMESTATE = GAMESTATE.PAUSED;
       console.log("GAME PAUSE");
       document.getElementById("title").style.display = "none";
-      document.getElementById("hamburger").checked = true;
+      //document.getElementById("hamburger").checked = true;
+      openNav();
     }
     else{
       this.GAMESTATE = GAMESTATE.RUNNING;
       document.getElementById("title").style.display = "block";
-      document.getElementById("hamburger").checked = false;
+      //document.getElementById("hamburger").checked = false;
+      closeNav();s
     }
   };
   this.pauseOverlay = function(ctx){

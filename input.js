@@ -13,7 +13,8 @@ export default function InputHandler(gameWorld){
     document.addEventListener("touchstart", touchStartHandler, false);
     document.addEventListener("touchmove", touchMoveHandler, { passive: false });
     document.addEventListener("touchend", touchEndHandler, false);
-    document.getElementById("hamburger").addEventListener("click", function(){ gameWorld.paused();});
+    document.getElementById("opener").addEventListener("click", function(){ gameWorld.paused();});
+    document.getElementById("closer").addEventListener("click", function(){ gameWorld.paused();});
     
     //BUTTON LISTENERS
     document.getElementById("resButton").addEventListener("click", utils.reset);
