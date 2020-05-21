@@ -22,6 +22,7 @@ export default function World(w, h) {
   //public properties
   this.numberOfBalls = 0;
   this.balls = [];
+  this.bricks = [];
   this.message = " ";
   this.score = 0;
   this.paddleWidth = 75;
@@ -51,14 +52,12 @@ export default function World(w, h) {
     this.headlines.addFeed('https://www.cbc.ca/cmlink/rss-topstories');
     this.headlines.addFeed('https://hnrss.org/frontpage');
     this.headlines.initialize();
-    this.headlines.createList();
     
     //instantiate objects
     this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
     this.ball.color = utils.randomizeColor();
     this.balls.push(this.ball);
     this.numberOfBalls += 1;
-    
     this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
     let bricks = new buildLevel(this, level2);
     
@@ -83,7 +82,6 @@ export default function World(w, h) {
     
     if(this.powerUpActive){
       this.elapsed += dt;
-      console.log(this.elapsed);
     }
     
     //if powerup time is up
@@ -138,14 +136,12 @@ export default function World(w, h) {
       this.GAMESTATE = GAMESTATE.PAUSED;
       console.log("GAME PAUSE");
       document.getElementById("title").style.display = "none";
-      //document.getElementById("hamburger").checked = true;
       openNav();
     }
     else{
       this.GAMESTATE = GAMESTATE.RUNNING;
       document.getElementById("title").style.display = "block";
-      //document.getElementById("hamburger").checked = false;
-      closeNav();s
+      closeNav();
     }
   };
   this.pauseOverlay = function(ctx){
