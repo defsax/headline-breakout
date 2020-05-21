@@ -70,6 +70,8 @@ export default function World(w, h) {
     //initialize input handler
     this.inputHandler = new InputHandler(this);
     this.inputHandler.initialize();
+    
+    this.initMenu();
   };
   this.update = function(dt){
     //skip rest of function if gamestate is paused.
@@ -136,12 +138,16 @@ export default function World(w, h) {
       this.GAMESTATE = GAMESTATE.PAUSED;
       console.log("GAME PAUSE");
       document.getElementById("title").style.display = "none";
-      openNav();
+      document.getElementById("opener").style.display = "none";
+      document.getElementById("nav-bar").style.display = "block";
+      //openNav();
     }
     else{
       this.GAMESTATE = GAMESTATE.RUNNING;
       document.getElementById("title").style.display = "block";
-      closeNav();
+      //closeNav();
+      document.getElementById("opener").style.display = "block";
+      document.getElementById("nav-bar").style.display = "none";
     }
   };
   this.pauseOverlay = function(ctx){
@@ -160,5 +166,24 @@ export default function World(w, h) {
                    "center",
                    ctx);
   };
+  this.initMenu = function(){
+    //code for accordion
+    var acc = document.getElementsByClassName("accordo");
+    var i;
 
+    for(let i = 0; i < acc.length; i++){
+      acc[i].addEventListener("click", function(){
+        /*togel between adding and removing the active class, to highlight the button that controls the panel*/
+        this.classList.toggle("active");
+        
+        /*toggel between hiding and showing the active panel*/
+        var panel = this.nextElementSibling;
+        if(panel.style.display === "block"){
+          panel.style.display = "none";
+        } else {
+          panel.style.display = "block";
+        }
+      });
+    }
+  };
 }

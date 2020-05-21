@@ -18,7 +18,7 @@
     <!--the overlay itself-->
     <div id="nav-bar" class="overlay">
       <!--button to close the overlay nav-->
-      <a href="javascript:void(0)" id="closer" class="closebtn" onclick="closeNav()">&times;</a>
+      <a href="javascript:void(0)" id="closer" class="closebtn">&times;</a>
       
       <!--overlay content-->
       <div class="overlay-content">
@@ -28,70 +28,18 @@
       </div>
     </div>
     
-    <span onclick="openNav()">
-      <a href="javascript:void(0)" id="opener" class="openbtn"
-      onclick="openNav()">&#9776;</a>
-    </span>
-    
-    <script>
-      //code for curtain menu
-      function openNav(){
-        document.getElementById("nav-bar").style.display = "block";
-        document.getElementById("opener").style.display = "none";
-      }
-      function closeNav(){
-        document.getElementById("nav-bar").style.display = "none";
-        document.getElementById("opener").style.display = "block";
-      }
-      
-      //code for accordion
-      var acc = document.getElementsByClassName("accordo");
-      var i;
-      
-      for(let i = 0; i < acc.length; i++){
-        acc[i].addEventListener("click", function(){
-          /*togel between adding and removing the active class, to highlight the button that controls the panel*/
-          this.classList.toggle("active");
-          
-          /*toggel between hiding and showing the active panel*/
-          var panel = this.nextElementSibling;
-          if(panel.style.display === "block"){
-            panel.style.display = "none";
-          } else {
-            panel.style.display = "block";
-          }
-        });
-      }
-    </script>
+    <!--hamburger button-->
+    <span>
+      <a href="javascript:void(0)" id="opener" class="openbtn">&#9776;</a>
+    </span>  
   
-    <!--
-    <nav id="ham-nav" class="noselect">
-      <label for="hamburger">&#9776;</label>
-      <input type="checkbox" id="hamburger"/>
-
-    <div id="items">
-      <a href="index.html">Home</a>
-      <a href="index.html">Headlines</a>
-    </div>
-    
-    <div id="headlines">
-      <ul id="oldhlines">
-        <li>
-          <a href="index.html">HEADLINES</a>
-        </li>
-      </ul>
-    </div>
-    
-    -->
-  
-  
+    <!--placeholder for title text-->
     <div class="container">
       <a id="title" target="_blank">SPACE / RELEASE TO START</a>
       <button id="resButton">REPLAY</button>
     </div>
    
     <canvas id="myCanvas"></canvas> 
-    
     <script src="main.js" type="module"></script>
     
    

@@ -10,6 +10,7 @@ canvas.height = window.innerHeight;
 //fit initial message to screen size
 utils.adjustFontSize('title');
 
+//create new instance of world and start it
 var world = new World(canvas.width, canvas.height);
 world.start();
 
