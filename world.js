@@ -101,10 +101,10 @@ export default function World(w, h) {
     objects.forEach(object => object.draw(ctx));
     
     //display current power up
-    utils.drawText(this.message, screenDimensions.width - 350, 25, "black", "fill", "30px Arial", "left", ctx);
+    utils.drawText(this.message, screenDimensions.width - 150, 50, "black", "fill", "20px Arial", "left", ctx);
     
     //display score
-    utils.drawText("Score: " + this.score, screenDimensions.width - 150, 25, "black", "fill", "30px Arial", "left", ctx);
+    utils.drawText("Score: " + this.score, screenDimensions.width - 150, 25, "black", "fill", "20px Arial", "left", ctx);
     
     if(this.GAMESTATE === GAMESTATE.PAUSED){
       this.pauseOverlay(ctx);

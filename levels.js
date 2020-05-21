@@ -26,21 +26,14 @@ export function buildLevel(gameWorld, level){
   
   //loop through rows in the level 2d array
   level.forEach((row, rowNumber) => {
-    //console.log("Row: " + row);
     
     //get number of bricks in row
     row.forEach((brick) => {
       ++bricksInRow;
-      //console.log(bricksInRow);
     });
-    
-    //console.log("Row Number: " + rowNumber + "\n\n");
+
     row.forEach((brick, brickNumber) => {
-      //console.log("Brick: " + brick);
-      //console.log("Brick Number: " + brickNumber + "\n");
-      
       if(brick === 1){
-        //console.log("Brick.");
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
           y: 50 + 20 * rowNumber
@@ -54,11 +47,7 @@ export function buildLevel(gameWorld, level){
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, true));
       }
-      //else
-        //console.log("No brick.");
     });
-    
-    //console.log("\n\n");
     bricksInRow = 0;
   });
   
