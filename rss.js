@@ -37,6 +37,7 @@
                 newTitle.innerHTML = title + "<br>";
                 newTitle.href = link;
                 newTitle.target = "_blank";
+                newTitle.id = "hitem";
                 container.appendChild(newTitle);
               }
             })
@@ -68,6 +69,7 @@
                   newTitle.innerHTML = title + "<br>";
                   newTitle.href = link;
                   newTitle.target = "_blank";
+                  newTitle.id = "hitem";
                   container.appendChild(newTitle);
                 }
               })

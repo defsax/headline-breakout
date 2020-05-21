@@ -18,6 +18,11 @@
   display: none;
   overflow: hidden;
 }
+#hitem{
+  border-top: 1px solid white;
+  padding-top: 0.5em;
+  padding-bottom: 0.5em;
+}
 
 /*the overlay*/
 .overlay{
@@ -30,8 +35,7 @@
   left: 0;
   background-color: rgb(0, 0, 0); /*fallback color?*/
   background-color: rgba(0, 0, 0, 0.7); /*with opacity*/
-  overflow-x: hidden; /*disable horizontal scroll*/
-  
+  overflow-x: hidden; /*disable horizontal scroll*/  
 }
 
 /*position the content inside the overlay*/

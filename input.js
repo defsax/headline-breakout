@@ -64,11 +64,11 @@ export default function InputHandler(gameWorld){
   
   //TOUCH CONTROLS  
   var touchStartHandler = function(e){
-    //e.preventDefault();
+    e.preventDefault();
     gameWorld.paddle.position.x = e.touches[0].clientX - gameWorld.paddle.w / 2;
   }  
   var touchMoveHandler = function(e){
-    //e.preventDefault();
+    e.preventDefault();
     gameWorld.paddle.position.x = e.touches[0].clientX - gameWorld.paddle.w / 2;
     if(gameWorld.paddle.position.x + gameWorld.paddle.w > gameWorld.getScreenDimensions().width)
         gameWorld.paddle.position.x = gameWorld.getScreenDimensions().width - gameWorld.paddle.w;
@@ -81,6 +81,6 @@ export default function InputHandler(gameWorld){
       gameWorld.ball.attached = false;
       document.getElementById('title').innerHTML = " ";
     }
-    //e.preventDefault();
+    e.preventDefault();
   }
 }
