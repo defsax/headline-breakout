@@ -45,7 +45,7 @@ export default function World(w, h) {
      * nytimes, huffpo, bbc, cbc, hackernews
     */
     
-    //this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
+    this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
     this.headlines.addFeed('http://feeds.bbci.co.uk/news/rss.xml');
     this.headlines.addFeed('https://www.huffpost.com/section/front-page/feed?x=1');
     this.headlines.addFeed('https://www.cbc.ca/cmlink/rss-topstories');

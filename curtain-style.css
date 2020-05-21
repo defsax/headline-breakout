@@ -68,6 +68,10 @@
   left: 0;
   font-size: 80px;
 }
+#closer{
+  position: fixed;
+  z-index: 5;
+}
 
 .openbtn {
   position: absolute;
