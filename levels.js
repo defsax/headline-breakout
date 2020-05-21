@@ -22,6 +22,7 @@ export function buildLevel(gameWorld, level){
   var canvasHeight = gameWorld.getScreenDimensions().height;
   
   var bricksInRow = 0;
+  var topSpace = 100;
   
   
   //loop through rows in the level 2d array
@@ -36,14 +37,14 @@ export function buildLevel(gameWorld, level){
       if(brick === 1){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: 50 + 20 * rowNumber
+          y: topSpace + 20 * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, false));
       }
       if(brick === 2){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: 50 + 20 * rowNumber
+          y: topSpace + 20 * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, true));
       }
