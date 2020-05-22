@@ -47,7 +47,6 @@ export default function World(w, h) {
      * rss feeds
      * nytimes, huffpo, bbc, cbc, hackernews
     */
-    
     this.headlines.addFeed('https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml');
     this.headlines.addFeed('http://feeds.bbci.co.uk/news/rss.xml');
     this.headlines.addFeed('https://www.huffpost.com/section/front-page/feed?x=1');
@@ -92,7 +91,7 @@ export default function World(w, h) {
     //objs = objs.filter(obj => !obj.deleted);
     
     //check if we should load new level
-    if(this.bricks.length === 0){
+    if(this.bricks.length === 0 || this.bricks.every(brick => brick.invincible)){
       currentLevel++;
       console.log("Level Completed");
       
