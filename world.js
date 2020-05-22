@@ -1,6 +1,6 @@
 import Ball from './ball.js';
 import Paddle from './paddle.js';
-import { buildLevel, level1, level2 } from './levels.js';
+import { buildLevel, level1, level2, level3, level4 } from './levels.js';
 import InputHandler from './input.js';
 import HeadlineHandler from './headline.js';
 import * as utils from './utilities.js';
@@ -11,6 +11,7 @@ export default function World(w, h) {
   var screenDimensions = { width: w, height: h }; //canvas reference
   var powerUpQueue = [];
   var currentPower;
+  var currentLevel = 0;
   
   const GAMESTATE = {
     PAUSED: 0,
@@ -23,6 +24,7 @@ export default function World(w, h) {
   //this.numberOfBalls = 0;
   this.balls = [];
   this.bricks = [];
+  this.levels = [ level1, level2 ];
   this.message = " ";
   this.score = 0;
   this.paddleWidth = 75;
@@ -59,7 +61,8 @@ export default function World(w, h) {
     this.balls.push(this.ball);
     //this.numberOfBalls += 1;
     this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
-    this.bricks = new buildLevel(this, level2);
+    this.bricks = new buildLevel(this, this.levels[currentLevel]);
+    console.log("Current level: " + currentLevel);
     
     //add objects to array
     //objects = objects.concat(this.balls);
@@ -88,6 +91,14 @@ export default function World(w, h) {
     //let objs = [...objects, ...this.balls, ...this.bricks];
     //objs = objs.filter(obj => !obj.deleted);
     
+    //check if we should load new level
+    if(this.bricks.length === 0){
+      currentLevel++;
+      console.log("Level Completed");
+      
+      this.reset();
+    }
+    
     //update powerup timer
     if(this.powerUpActive){
       this.elapsed += dt;
@@ -109,13 +120,47 @@ export default function World(w, h) {
     [...objects, ...this.balls, ...this.bricks].forEach(object => object.draw(ctx));
     
     //display current power up
-    utils.drawText(this.message, screenDimensions.width - 5, 50, "black", "fill", "20px Arial", "right", ctx);
+    utils.drawText(this.message, screenDimensions.width - 5, 75, "black", "fill", "20px Arial", "right", ctx);
     
     //display score
-    utils.drawText("Score: " + this.score, screenDimensions.width - 5, 25, "black", "fill", "20px Arial", "right", ctx);
+    utils.drawText("Score: " + this.score, screenDimensions.width - 5, 50, "black", "fill", "20px Arial", "right", ctx);
+    
+    //display current level
+    utils.drawText("Level: " + currentLevel, screenDimensions.width - 5, 25, "black", "fill", "20px Arial", "right", ctx);
+    
     
     if(this.GAMESTATE === GAMESTATE.PAUSED){
       this.pauseOverlay(ctx);
+    }
+  };
+  
+  this.reset = function(){
+    
+    console.log("Total levels: " + this.levels.length);
+    if(currentLevel < this.levels.length){
+      //reset objects
+      this.balls = [];
+      this.bricks = [];
+      this.paddle = null;
+      this.paddle = undefined;
+      objects = [];
+      
+      //re-instantiate objects
+      this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
+      this.ball.color = utils.randomizeColor();
+      this.balls.push(this.ball);
+      //this.numberOfBalls += 1;
+      this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
+      objects.push(this.paddle);
+      this.bricks = new buildLevel(this, this.levels[currentLevel]);
+      
+      document.getElementById("title").innerHTML = "SPACE / RELEASE TO START";
+      utils.adjustFontSize('title');
+    }else{
+      console.log("All levels complete.");
+      document.getElementById("title").innerHTML = "ALL LEVELS COMPLETE<br>SCORE: " + this.score;
+      utils.adjustFontSize('title');
+      this.gameOver = true;
     }
   };
   

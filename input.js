@@ -15,8 +15,6 @@ export default function InputHandler(gameWorld){
     document.addEventListener("touchend", touchEndHandler, false);
     document.getElementById("opener").addEventListener("click", function(){ gameWorld.paused();});
     document.getElementById("closer").addEventListener("click", function(){ gameWorld.paused();});
-    //document.getElementById("opener").addEventListener("click", function(){ gameWorld.paused();});
-    //document.getElementById("closer").addEventListener("click", function(){ gameWorld.paused();});
     
     //BUTTON LISTENERS
     document.getElementById("resButton").addEventListener("click", utils.reset);

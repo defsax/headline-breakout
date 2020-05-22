@@ -36,9 +36,7 @@ export default function Brick(columns, position, gameWorld, powerUp){
           ));
         }        
       }
-      
     }
-    
     if(this.special === true){
       this.color = utils.randomizeColor();
     }

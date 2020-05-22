@@ -36,6 +36,11 @@ function gameLoop(){
     
     requestAnimationFrame(gameLoop);
   }
+  else{
+    //display score
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    console.log("Main.js");
+  }
 };
 requestAnimationFrame(gameLoop);
 
