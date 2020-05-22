@@ -88,8 +88,8 @@ export default function PowerUP(x, y, s, gameWorld){
       newBall.deleted = false;
       
       gameWorld.balls.push(newBall); //register with ball array
-      gameWorld.addObject(newBall); //add to object array
-      gameWorld.numberOfBalls += 1;
+      //gameWorld.addObject(newBall); //add to object array
+      //gameWorld.numberOfBalls += 1;
       gameWorld.duration = 0.1 //reset powerup timer right away
     },
     stop: function(){
@@ -100,7 +100,7 @@ export default function PowerUP(x, y, s, gameWorld){
   };
   
   var randomPowerUp = function(){
-    var x = Math.floor(Math.random() * 5);
+    var x = 4;//Math.floor(Math.random() * 5);
     switch(x){
       case 0:
         return shortPad;

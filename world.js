@@ -20,14 +20,14 @@ export default function World(w, h) {
   };
   
   //public properties
-  this.numberOfBalls = 0;
+  //this.numberOfBalls = 0;
   this.balls = [];
   this.bricks = [];
   this.message = " ";
   this.score = 0;
   this.paddleWidth = 75;
   this.ballSpeed = 200;
-  this.gameOver = false;
+  this.gameOver = false; //accessible from main.js
   this.powerUpActive = false;
   this.elapsed = 0;
   this.duration = 10;
@@ -57,15 +57,15 @@ export default function World(w, h) {
     this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
     this.ball.color = utils.randomizeColor();
     this.balls.push(this.ball);
-    this.numberOfBalls += 1;
+    //this.numberOfBalls += 1;
     this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
-    let bricks = new buildLevel(this, level2);
+    this.bricks = new buildLevel(this, level2);
     
     //add objects to array
     //objects = objects.concat(this.balls);
-    objects.push(...this.balls);
+    //objects.push(...this.balls);
     objects.push(this.paddle);
-    objects.push(...bricks); //spread operator
+    //objects.push(...bricks); //spread operator
     
     //initialize input handler
     this.inputHandler = new InputHandler(this);
@@ -78,10 +78,17 @@ export default function World(w, h) {
     if(this.GAMESTATE === GAMESTATE.PAUSED) return;
     
     //update objects
-    objects.forEach(object => object.update(dt));
+    //objects.forEach(object => object.update(dt));
+    [...objects, ...this.balls, ...this.bricks].forEach(object => object.update(dt));
+    
+    //delete objects
     objects = objects.filter(object => !object.deleted);
     this.balls = this.balls.filter(b => !b.deleted);
+    this.bricks = this.bricks.filter(brick => !brick.deleted);
+    //let objs = [...objects, ...this.balls, ...this.bricks];
+    //objs = objs.filter(obj => !obj.deleted);
     
+    //update powerup timer
     if(this.powerUpActive){
       this.elapsed += dt;
     }
@@ -98,7 +105,8 @@ export default function World(w, h) {
   };
   
   this.draw = function(ctx){
-    objects.forEach(object => object.draw(ctx));
+    //objects.forEach(object => object.draw(ctx));
+    [...objects, ...this.balls, ...this.bricks].forEach(object => object.draw(ctx));
     
     //display current power up
     utils.drawText(this.message, screenDimensions.width - 5, 50, "black", "fill", "20px Arial", "right", ctx);

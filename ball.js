@@ -77,10 +77,11 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.speed = 0;
       
       gameWorld.inputHandler.disable();
+      //gameWorld.GAMESTATE = gameWorld.GAMESTATE.GAMEOVER;
       gameWorld.gameOver = true;
     }
     else if(this.position.y + this.direction.y > canvasDimensions.h + this.radius && gameWorld.balls.length > 1){
-      gameWorld.numberOfBalls--;
+      //gameWorld.numberOfBalls--;
       this.deleted = true;
     }
 

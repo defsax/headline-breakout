@@ -19,7 +19,6 @@ export default function Brick(columns, position, gameWorld, powerUp){
   this.special = powerUp;
   
   this.update = function(dt){
-    //console.log("Brick update");
     for(let i = 0; i < gameWorld.balls.length; i++){
       if(utils.areColliding(gameWorld.balls[i], this)){
         gameWorld.score += 10;
@@ -37,6 +36,7 @@ export default function Brick(columns, position, gameWorld, powerUp){
           ));
         }        
       }
+      
     }
     
     if(this.special === true){
