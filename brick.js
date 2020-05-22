@@ -1,7 +1,7 @@
 import * as utils from './utilities.js';
 import PowerUP from './powerup.js';
 
-export default function Brick(columns, position, gameWorld, powerUp){
+export default function Brick(columns, position, gameWorld, powerUp, inv, hp, col){
   var gameWidth = gameWorld.getScreenDimensions().width;
   var gameHeight = gameWorld.getScreenDimensions().height;
   
@@ -13,17 +13,32 @@ export default function Brick(columns, position, gameWorld, powerUp){
   this.w = gameWidth / columns;
   this.h = 20;
   
-  this.color = '#f5f5f0';
+  this.color = col;//'#f5f5f0';
   
   this.deleted = false;
   this.special = powerUp;
+  this.invincible = inv;
+  this.health = hp;
   
   this.update = function(dt){
     for(let i = 0; i < gameWorld.balls.length; i++){
       if(utils.areColliding(gameWorld.balls[i], this)){
-        gameWorld.score += 10;
         gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
-        this.deleted = true;
+        
+        if(this.invincible === false){
+          this.health -= 1;
+          if(this.health === 2)
+            this.color = '#79BAEC';
+          if(this.health === 1)
+            this.color = '#ADDFFF';
+        }
+        
+        if(this.invincible === false && this.health < 1){
+          gameWorld.score += 10;
+          this.deleted = true;
+        }
+        
+        console.log(this.health);
         
         if(this.special === true){
           //if new brick is special, it's a powerup brick:

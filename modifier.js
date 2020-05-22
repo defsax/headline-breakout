@@ -1,3 +1,4 @@
+/*
 var Modifier = (function() {
   var x = 0;
   var currentPower;
@@ -16,3 +17,4 @@ var Modifier = (function() {
     }
   };
 })();
+*/
