@@ -1,6 +1,6 @@
 import Ball from './ball.js';
 import Paddle from './paddle.js';
-import { buildLevel, level1, level2, level3, level4 } from './levels.js';
+import { buildLevel, level1, level2, level3, level4, level5, level6, level7, level8 } from './levels.js';
 import InputHandler from './input.js';
 import HeadlineHandler from './headline.js';
 import * as utils from './utilities.js';
@@ -24,7 +24,7 @@ export default function World(w, h) {
   //this.numberOfBalls = 0;
   this.balls = [];
   this.bricks = [];
-  this.levels = [ level1, level2 ];
+  this.levels = [ level6 ];
   this.message = " ";
   this.score = 0;
   this.paddleWidth = 75;
