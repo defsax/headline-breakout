@@ -92,7 +92,7 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.color = utils.randomizeColor();
       
       //load new headline and resize it
-      gameWorld.headlines.updateHeadline('title');
+      //gameWorld.headlines.updateHeadline('title');
       utils.adjustFontSize('title');
     }
   }

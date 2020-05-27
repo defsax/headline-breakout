@@ -11,7 +11,7 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
   }
   
   this.w = gameWidth / columns;
-  this.h = 20;
+  this.h = 30;
   
   this.color = col;//'#f5f5f0';
   
@@ -23,8 +23,6 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
   this.update = function(dt){
     for(let i = 0; i < gameWorld.balls.length; i++){
       if(utils.areColliding(gameWorld.balls[i], this)){
-        gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
-        
         if(this.invincible === false){
           this.health -= 1;
           if(this.health === 2)
@@ -49,58 +47,35 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
             50, 
             gameWorld
           ));
-        }        
+        }
+        
+        //reverse directions
+        if(gameWorld.balls[i].position.x > this.position.x + this.w){
+          gameWorld.balls[i].direction.x = -gameWorld.balls[i].direction.x;
+          console.log("hit on the right side");
+          gameWorld.balls[i].position.x = this.position.x + this.w + gameWorld.balls[i].radius;
+          //break;
+        }
+        else if(gameWorld.balls[i].position.x < this.position.x){
+          gameWorld.balls[i].direction.x = -gameWorld.balls[i].direction.x;
+          console.log("hit on the left side");
+          gameWorld.balls[i].position.x = this.position.x - gameWorld.balls[i].radius;
+        }
+        else if(gameWorld.balls[i].position.y < this.position.y){
+          gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
+          console.log("hit on the top");
+          gameWorld.balls[i].position.y = this.position.y - gameWorld.balls[i].radius;
+        }
+        else if(gameWorld.balls[i].position.y > this.position.y + this.h){
+          gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
+          console.log("hit on the bottom");
+          gameWorld.balls[i].position.y = this.position.y + this.h + gameWorld.balls[i].radius;
+        }
       }
     }
     if(this.special === true){
       this.color = utils.randomizeColor();
-    }
-    
-    /*
-    //check ball collision with bricks
-    for(let c = 0; c < brcks.colCount; c++){
-      for(let r = 0; r < brcks.rowCount; r++){
-        let b = brcks.bArray[c][r];
-        if(utils.areColliding(this, b)){
-          let top = b.position.y;
-          let bottom = b.position.y + b.h;
-          let left = b.position.x;
-          let right = b.position.x + b.w;
-          
-          this.color = utils.randomizeColor();
-          
-          if(this.position.x + this.radius < left){
-            console.log("Left."); 
-            this.direction.x = -this.direction.x;
-            this.position.x = left - this.radius;
-            break;
-          }
-          else if(this.position.x - this.radius > right){
-            console.log("Right.");
-            this.direction.x = -this.direction.x;
-            this.position.x = right + this.radius;
-            break;
-          }
-          else if(this.position.y - this.radius < top){
-            console.log("Top.");
-            this.position.y = top - this.radius;
-            this.direction.y = -this.direction.y;
-            break;
-          }
-          else if(this.position.y + this.radius > bottom){
-            console.log("Bottom");
-            this.position.y = bottom + this.radius;
-            this.direction.y = -this.direction.y;
-            break;
-          }
-          
-          
-          console.log("Collision: " + "\nTop: " + top + "\nBottom: " + bottom + "\nLeft: " + left + "\nRight: " + right);
-        }
-      }
-    }
-    */
-    
+    }    
   }
   
   this.draw = function(context){

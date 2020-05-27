@@ -24,7 +24,7 @@ export default function World(w, h) {
   //this.numberOfBalls = 0;
   this.balls = [];
   this.bricks = [];
-  this.levels = [ level6 ];
+  this.levels = [ level1, level2, level3, level4, level5, level6, level7, level8 ];
   this.message = " ";
   this.score = 0;
   this.paddleWidth = 75;

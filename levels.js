@@ -72,6 +72,7 @@ export function buildLevel(gameWorld, level){
   
   var bricksInRow = 0;
   var topSpace = 100;
+  var brickHeight = 30;
   
   
   //loop through rows in the level 2d array
@@ -102,7 +103,7 @@ export function buildLevel(gameWorld, level){
       if(brick === 1){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + 20 * rowNumber
+          y: topSpace + brickHeight * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, true, false, 1, '#ffffff'));
       }
@@ -110,7 +111,7 @@ export function buildLevel(gameWorld, level){
       if(brick === 2){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + 20 * rowNumber
+          y: topSpace + brickHeight * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, false, true, 0, '#837E7C'));
       }
@@ -118,7 +119,7 @@ export function buildLevel(gameWorld, level){
       if(brick === 3){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + 20 * rowNumber
+          y: topSpace + brickHeight * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 1, '#ADDFFF'));
       }
@@ -126,7 +127,7 @@ export function buildLevel(gameWorld, level){
       if(brick === 4){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + 20 * rowNumber
+          y: topSpace + brickHeight * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 2, '#79BAEC'));
       }
@@ -134,7 +135,7 @@ export function buildLevel(gameWorld, level){
       if(brick === 5){
         let pos = {
           x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + 20 * rowNumber
+          y: topSpace + brickHeight * rowNumber
         }
         bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 3, '#306EFF'));
       }
