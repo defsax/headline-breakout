@@ -58,7 +58,6 @@ export default function World(w, h) {
     this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
     this.ball.color = utils.randomizeColor();
     this.balls.push(this.ball);
-    //this.numberOfBalls += 1;
     this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
     this.bricks = new buildLevel(this, this.levels[currentLevel]);
     console.log("Current level: " + currentLevel);

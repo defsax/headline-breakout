@@ -74,10 +74,16 @@ export function buildLevel(gameWorld, level){
   var topSpace = 100;
   var brickHeight = 30;
   
+  let createBrick = function(brickNum, rowNum, isSpecial, isInvincible, hp, color){
+    let pos = {
+      x: canvasWidth / bricksInRow * brickNum, 
+      y: topSpace + brickHeight * rowNum
+    }
+    bricks.push(new Brick(bricksInRow, pos, gameWorld, isSpecial, isInvincible, hp, color));
+  }
   
   //loop through rows in the level 2d array
   level.forEach((row, rowNumber) => {
-    
     //get number of bricks in row
     row.forEach((brick) => {
       ++bricksInRow;
@@ -87,57 +93,27 @@ export function buildLevel(gameWorld, level){
       
       switch(brick){
         case 1:
+          //special brick
+          createBrick(brickNumber, rowNumber, true, false, 1, '#ffffff');
           break;
         case 2:
+          //invincible brick
+          createBrick(brickNumber, rowNumber, false, true, 0, '#837E7C');
           break;
         case 3:
+          //one hit
+          createBrick(brickNumber, rowNumber, false, false, 1, '#ADDFFF');
           break;
         case 4:
+          //two hits
+          createBrick(brickNumber, rowNumber, false, false, 2, '#79BAEC');
           break;
         case 5:
+          //three hits
+          createBrick(brickNumber, rowNumber, false, false, 3, '#306EFF');
           break;
         default:
           break;
-      }
-      //special
-      if(brick === 1){
-        let pos = {
-          x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + brickHeight * rowNumber
-        }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld, true, false, 1, '#ffffff'));
-      }
-      //invincible
-      if(brick === 2){
-        let pos = {
-          x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + brickHeight * rowNumber
-        }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld, false, true, 0, '#837E7C'));
-      }
-      //1 hit
-      if(brick === 3){
-        let pos = {
-          x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + brickHeight * rowNumber
-        }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 1, '#ADDFFF'));
-      }
-      //2 hit
-      if(brick === 4){
-        let pos = {
-          x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + brickHeight * rowNumber
-        }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 2, '#79BAEC'));
-      }
-      //3 hit
-      if(brick === 5){
-        let pos = {
-          x: canvasWidth / bricksInRow * brickNumber, 
-          y: topSpace + brickHeight * rowNumber
-        }
-        bricks.push(new Brick(bricksInRow, pos, gameWorld, false, false, 3, '#306EFF'));
       }
     });
     bricksInRow = 0;

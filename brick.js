@@ -36,8 +36,6 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
           this.deleted = true;
         }
         
-        console.log(this.health);
-        
         if(this.special === true){
           //if new brick is special, it's a powerup brick:
             //create it in world so it can be updated
@@ -51,24 +49,24 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
         
         //reverse directions
         if(gameWorld.balls[i].position.x > this.position.x + this.w){
+          //right side collision
           gameWorld.balls[i].direction.x = -gameWorld.balls[i].direction.x;
-          console.log("hit on the right side");
           gameWorld.balls[i].position.x = this.position.x + this.w + gameWorld.balls[i].radius;
           //break;
         }
         else if(gameWorld.balls[i].position.x < this.position.x){
+          //left side collision
           gameWorld.balls[i].direction.x = -gameWorld.balls[i].direction.x;
-          console.log("hit on the left side");
           gameWorld.balls[i].position.x = this.position.x - gameWorld.balls[i].radius;
         }
         else if(gameWorld.balls[i].position.y < this.position.y){
+          //top collision
           gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
-          console.log("hit on the top");
           gameWorld.balls[i].position.y = this.position.y - gameWorld.balls[i].radius;
         }
         else if(gameWorld.balls[i].position.y > this.position.y + this.h){
+          //bottom collision
           gameWorld.balls[i].direction.y = -gameWorld.balls[i].direction.y;
-          console.log("hit on the bottom");
           gameWorld.balls[i].position.y = this.position.y + this.h + gameWorld.balls[i].radius;
         }
       }

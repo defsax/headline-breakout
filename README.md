@@ -9,4 +9,4 @@ Uses Fetch API and parses XML from a few different news outlets/aggregators incl
 <br>HuffPo
 <br>HackerNews
 
-https://developer.mozilla.org/en-US/docs/Games/Tutorials/2D_Breakout_game_pure_JavaScript
+Written using vanilla javascript and HTML5 canvas.

@@ -46,7 +46,6 @@ export default function Ball(gameWorld, x, y, r, speed){
   this.checkBoundaries = function(dt){
     
     var pad = gameWorld.paddle;
-    //var brcks = gameWorld.bricks;
     
     //check left boundary
     if(this.position.x + this.direction.x < this.radius){
@@ -72,16 +71,14 @@ export default function Ball(gameWorld, x, y, r, speed){
     if(this.position.y + this.direction.y > canvasDimensions.h - this.radius && gameWorld.balls.length === 1){
       //show button, set text to game over and disable link
       document.getElementById("resButton").style.display = "block";
-      document.getElementById("title").innerHTML = "GAME OVER";
+      document.getElementById("gameOver").style.display = "block";
       document.getElementById("title").style.pointerEvents = "none"; 
       this.speed = 0;
       
       gameWorld.inputHandler.disable();
-      //gameWorld.GAMESTATE = gameWorld.GAMESTATE.GAMEOVER;
       gameWorld.gameOver = true;
     }
     else if(this.position.y + this.direction.y > canvasDimensions.h + this.radius && gameWorld.balls.length > 1){
-      //gameWorld.numberOfBalls--;
       this.deleted = true;
     }
 
@@ -92,7 +89,7 @@ export default function Ball(gameWorld, x, y, r, speed){
       this.color = utils.randomizeColor();
       
       //load new headline and resize it
-      //gameWorld.headlines.updateHeadline('title');
+      gameWorld.headlines.updateHeadline('title');
       utils.adjustFontSize('title');
     }
   }
