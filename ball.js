@@ -73,6 +73,7 @@ export default function Ball(gameWorld, x, y, r, speed){
       document.getElementById("resButton").style.display = "block";
       document.getElementById("gameOver").style.display = "block";
       document.getElementById("title").style.pointerEvents = "none"; 
+      document.getElementById("title").style.display = "none"; 
       this.speed = 0;
       
       gameWorld.inputHandler.disable();

@@ -21,7 +21,6 @@ export default function World(w, h) {
   };
   
   //public properties
-  //this.numberOfBalls = 0;
   this.balls = [];
   this.bricks = [];
   this.levels = [ level1, level2, level3, level4, level5, level6, level7, level8 ];
@@ -60,13 +59,9 @@ export default function World(w, h) {
     this.balls.push(this.ball);
     this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
     this.bricks = new buildLevel(this, this.levels[currentLevel]);
-    console.log("Current level: " + currentLevel);
     
     //add objects to array
-    //objects = objects.concat(this.balls);
-    //objects.push(...this.balls);
     objects.push(this.paddle);
-    //objects.push(...bricks); //spread operator
     
     //initialize input handler
     this.inputHandler = new InputHandler(this);
@@ -82,18 +77,15 @@ export default function World(w, h) {
     //objects.forEach(object => object.update(dt));
     [...objects, ...this.balls, ...this.bricks].forEach(object => object.update(dt));
     
-    //delete objects
+    //delete objects marked for deletion using array.prototype.filter
     objects = objects.filter(object => !object.deleted);
     this.balls = this.balls.filter(b => !b.deleted);
     this.bricks = this.bricks.filter(brick => !brick.deleted);
-    //let objs = [...objects, ...this.balls, ...this.bricks];
-    //objs = objs.filter(obj => !obj.deleted);
     
     //check if we should load new level
     if(this.bricks.length === 0 || this.bricks.every(brick => brick.invincible)){
       currentLevel++;
       console.log("Level Completed");
-      
       this.reset();
     }
     
@@ -114,7 +106,7 @@ export default function World(w, h) {
   };
   
   this.draw = function(ctx){
-    //objects.forEach(object => object.draw(ctx));
+    //call each object's draw function using spread operator
     [...objects, ...this.balls, ...this.bricks].forEach(object => object.draw(ctx));
     
     //display current power up
@@ -147,9 +139,10 @@ export default function World(w, h) {
       this.ball = new Ball(this, 20, 20, 10, this.ballSpeed);
       this.ball.color = utils.randomizeColor();
       this.balls.push(this.ball);
-      //this.numberOfBalls += 1;
+      
       this.paddle = new Paddle(this, this.paddleWidth, 10, 300);
       objects.push(this.paddle);
+      
       this.bricks = new buildLevel(this, this.levels[currentLevel]);
       
       document.getElementById("title").innerHTML = "SPACE / RELEASE TO START";
@@ -157,6 +150,7 @@ export default function World(w, h) {
     }else{
       console.log("All levels complete.");
       document.getElementById("title").innerHTML = "ALL LEVELS COMPLETE<br>SCORE: " + this.score;
+      document.getElementById("title").style.pointerEvents = "none";
       utils.adjustFontSize('title');
       this.gameOver = true;
     }
