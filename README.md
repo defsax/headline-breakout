@@ -9,4 +9,4 @@ Uses Fetch API and parses XML from a few different news outlets/aggregators incl
 <br>HuffPo
 <br>HackerNews
 
-Written using vanilla javascript and HTML5 canvas.
+Written using vanilla javascript and uses HTML5 canvas.

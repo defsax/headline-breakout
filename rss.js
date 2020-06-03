@@ -55,6 +55,8 @@
                 
                 //filter out nytimes non-headlines
                 if(title === 'Try Tiles' ||
+                  title === 'Try Vertex' ||
+                  title === 'The Crossword, Tiles and More' ||
                   title === 'The Crossword, Vertex and More' ||
                   title === 'Try Spelling Bee' ||
                   title === '' ||

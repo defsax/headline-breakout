@@ -13,7 +13,7 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
   this.w = gameWidth / columns;
   this.h = 30;
   
-  this.color = col;//'#f5f5f0';
+  this.color = col;
   
   this.deleted = false;
   this.special = powerUp;
@@ -52,7 +52,6 @@ export default function Brick(columns, position, gameWorld, powerUp, inv, hp, co
           //right side collision
           gameWorld.balls[i].direction.x = -gameWorld.balls[i].direction.x;
           gameWorld.balls[i].position.x = this.position.x + this.w + gameWorld.balls[i].radius;
-          //break;
         }
         else if(gameWorld.balls[i].position.x < this.position.x){
           //left side collision

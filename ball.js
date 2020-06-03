@@ -96,7 +96,7 @@ export default function Ball(gameWorld, x, y, r, speed){
   }
   
   this.calculateStartAngle = function(){
-    var newBounceAngle = utils.getRndFloat(-1, 1) * (5*Math.PI/12);
+    var newBounceAngle = utils.getRndFloat(-1, 1) * (5 * Math.PI / 12);
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);
     this.direction.x = -this.direction.x;
@@ -104,10 +104,11 @@ export default function Ball(gameWorld, x, y, r, speed){
   
   this.calculateNewAngle = function(pad){
     var paddleCenter = pad.position.x + (pad.w / 2);
-    var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
+    var distanceFromCenter = paddleCenter - this.position.x;
+    //var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
   
     var normalizeIntersect = distanceFromCenter / (pad.w / 2);
-    var newBounceAngle = normalizeIntersect * (5*Math.PI/17); //12
+    var newBounceAngle = normalizeIntersect * (5 * Math.PI / 17 );
     
     this.direction.x = Math.sin(newBounceAngle);
     this.direction.y = -Math.cos(newBounceAngle);
