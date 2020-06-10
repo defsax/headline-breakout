@@ -2,7 +2,7 @@
 .accordo{
   color: white;
   cursor: pointer;
-  padding: 18px;
+  padding: 1px;
   width: 100%;
   border: none;
   outline: none;
@@ -29,7 +29,7 @@
   height: 100%;
   width: 100%;
   position: fixed;
-  z-index: 1;
+  z-index: 3;
   display: none;
   top: 0;
   left: 0;

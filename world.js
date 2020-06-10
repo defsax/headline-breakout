@@ -185,12 +185,12 @@ export default function World(w, h) {
       document.getElementById("title").style.display = "none";
       document.getElementById("opener").style.display = "none";
       document.getElementById("nav-bar").style.display = "block";
-      //openNav();
     }
     else{
       this.GAMESTATE = GAMESTATE.RUNNING;
-      document.getElementById("title").style.display = "block";
-      //closeNav();
+      if(!this.gameOver)
+        document.getElementById("title").style.display = "block";
+      
       document.getElementById("opener").style.display = "block";
       document.getElementById("nav-bar").style.display = "none";
     }
