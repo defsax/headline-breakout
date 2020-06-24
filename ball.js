@@ -105,7 +105,6 @@ export default function Ball(gameWorld, x, y, r, speed){
   this.calculateNewAngle = function(pad){
     var paddleCenter = pad.position.x + (pad.w / 2);
     var distanceFromCenter = paddleCenter - this.position.x;
-    //var distanceFromCenter = (pad.position.x + (pad.w / 2)) - (this.position.x);
   
     var normalizeIntersect = distanceFromCenter / (pad.w / 2);
     var newBounceAngle = normalizeIntersect * (5 * Math.PI / 17 );

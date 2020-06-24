@@ -69,6 +69,7 @@ export default function World(w, h) {
     
     this.initMenu();
   };
+  
   this.update = function(dt){
     //skip rest of function if gamestate is paused.
     if(this.GAMESTATE === GAMESTATE.PAUSED) return;
@@ -125,7 +126,6 @@ export default function World(w, h) {
   };
   
   this.reset = function(){
-    
     console.log("Total levels: " + this.levels.length);
     if(currentLevel < this.levels.length){
       //reset objects
@@ -175,9 +175,11 @@ export default function World(w, h) {
       }
     }
   };  
+  
   this.getScreenDimensions = function(){ 
     return screenDimensions; 
   };
+  
   this.paused = function(){
     if(this.GAMESTATE === GAMESTATE.RUNNING){
       this.GAMESTATE = GAMESTATE.PAUSED;
@@ -195,6 +197,7 @@ export default function World(w, h) {
       document.getElementById("nav-bar").style.display = "none";
     }
   };
+  
   this.pauseOverlay = function(ctx){
     ctx.beginPath();
     ctx.rect(0, 0, screenDimensions.width, screenDimensions.height);
@@ -211,6 +214,7 @@ export default function World(w, h) {
                    "center",
                    ctx);
   };
+  
   this.initMenu = function(){
     //code for accordion
     var acc = document.getElementsByClassName("accordo");
