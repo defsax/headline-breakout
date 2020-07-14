@@ -2,7 +2,7 @@
 
 Basically a gamified RSS reader. Works on web and mobile browsers!
 
-(https://perrydefayette.dev/projects/headline-breakout/)
+https://perrydefayette.dev/projects/headline-breakout/
 
 Uses Fetch API and parses XML from a few different news outlets/aggregators including:
 <br>The New York Times
